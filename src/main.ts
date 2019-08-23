@@ -9,12 +9,20 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
 export class GameScene extends Phaser.Scene {
   cursors: Phaser.Types.Input.Keyboard.CursorKeys;
   marty: Phaser.Physics.Arcade.Sprite;
+  music: Phaser.Types.Sound.SoundMarker;
+  spaceBar: Phaser.Input.Keyboard.Key;
 
   constructor() {
     super(sceneConfig);
   }
  
   public preload() : void {
+    this.load.audio(
+      'power_of_love', [
+        'assets/audio/power_of_love.mp3',
+        'assets/audio/power_of_love.ogg'
+      ]
+    )
     this.load.spritesheet(
         'marty',
         'assets/sprites/MartyPushCycle.png',
@@ -23,6 +31,11 @@ export class GameScene extends Phaser.Scene {
   }
 
   public create() : void {
+    // inside create method
+    this.spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+    
+    let music = this.sound.add('power_of_love', {loop: true});
+    music.play();
     this.cursors = this.input.keyboard.createCursorKeys();
     this.marty = this.physics.add.sprite(window.innerWidth/2, window.innerHeight-100, 'marty', 0);
     this.marty.scaleX = 0.25;
@@ -75,6 +88,10 @@ export class GameScene extends Phaser.Scene {
         this.marty.setVelocity(0, 0);
         this.marty.anims.play('coast', true);
     }
+  }
+
+  render() : void {
+    
   }
 }
 
