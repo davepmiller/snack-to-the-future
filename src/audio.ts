@@ -6,7 +6,7 @@ export class Audio {
   constructor (pluginLoader: Phaser.Loader.LoaderPlugin) {
     pluginLoader.audio(
       'power_of_love', [
-        // 'assets/audio/power_of_love.mp3',
+        'assets/audio/power_of_love.mp3',
         'assets/audio/power_of_love.ogg'
       ]
     )
