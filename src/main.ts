@@ -3,10 +3,11 @@ import {Marty} from './marty';
 import {Trump} from './trump';
 import {Audio} from './audio';
 import {gameConfig, sceneConfig} from './config'
+type CursorKeys = Phaser.Types.Input.Keyboard.CursorKeys;
 
 export class GameScene extends Phaser.Scene {
   audio: Audio;
-  cursors: Phaser.Types.Input.Keyboard.CursorKeys;
+  cursors: CursorKeys;
   marty: Marty;
   trump: Trump;
 

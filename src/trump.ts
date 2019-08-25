@@ -1,5 +1,8 @@
 import * as Phaser from 'phaser';
 import {GameScene} from './main';
+type Sprite = Phaser.Physics.Arcade.Sprite;
+type AnimationFrame = Phaser.Types.Animations.AnimationFrame;
+type AnimationManager = Phaser.Animations.AnimationManager;
 
 const SCALE_X = 0.25;
 const SCALE_Y = 0.25;
@@ -10,7 +13,7 @@ const FRAME_SIZE = {frameWidth: 1000, frameHeight: 1000};
 
 export class Trump {
   scene: GameScene;
-  sprite: Phaser.Physics.Arcade.Sprite;
+  sprite: Sprite;
 
   constructor(gameScene: GameScene) {
     this.scene = gameScene;
@@ -30,7 +33,7 @@ export class Trump {
     this.sprite.anims.play('trumpCruise', true);
   }
 
-  private createAnimations(anims: Phaser.Animations.AnimationManager) {
+  private createAnimations(anims: AnimationManager) {
     anims.create({
       key: 'trumpCruise',
       frames: this.cruiseFrames(),
@@ -44,7 +47,7 @@ export class Trump {
     });
   }
 
-  private cruiseFrames() : Phaser.Types.Animations.AnimationFrame[] {
+  private cruiseFrames() : AnimationFrame[] {
     var frames = [];
     for (var i = 0; i < 31; i++) {
       frames.push({key: SPRITE_NAME, frame: i});
@@ -53,7 +56,7 @@ export class Trump {
     return frames;
   }
 
-  private throwFrames() : Phaser.Types.Animations.AnimationFrame[] {
+  private throwFrames() : AnimationFrame[] {
     var frames = [];
     for (var i = 9; i < 26; i++) {
       frames.push({key: SPRITE_NAME, frame: i});

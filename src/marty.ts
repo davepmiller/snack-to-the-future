@@ -3,6 +3,7 @@ import {GameScene} from './main';
 type Sprite = Phaser.Physics.Arcade.Sprite;
 type Gamepad = Phaser.Input.Gamepad.Gamepad;
 type Button = Phaser.Input.Gamepad.Button;
+type AnimationFrame = Phaser.Types.Animations.AnimationFrame;
 
 const SCALE_X = 0.25;
 const SCALE_Y = 0.25;
@@ -12,7 +13,7 @@ const ASSET_PATH = 'assets/sprites/marty.png';
 const FRAME_SIZE = {frameWidth: 1000, frameHeight: 1000};
 
 export class Marty {
-  sprite: Phaser.Physics.Arcade.Sprite;
+  sprite: Sprite;
   scene: GameScene;
 
   constructor(scene: GameScene) {
@@ -97,7 +98,7 @@ export class Marty {
     });
   }
 
-  private cruiseFrames() : Phaser.Types.Animations.AnimationFrame[] {
+  private cruiseFrames() : AnimationFrame[] {
     var frames = [];
     for (var i = 0; i < 9; i++) {
       frames.push({key: SPRITE_NAME, frame: i});
@@ -110,7 +111,7 @@ export class Marty {
     return frames;
   }
 
-  private ollieFrames() : Phaser.Types.Animations.AnimationFrame[] {
+  private ollieFrames() : AnimationFrame[] {
     var frames = [];
     for (var i = 9; i < 26; i++) {
       frames.push({key: SPRITE_NAME, frame: i});
@@ -119,7 +120,7 @@ export class Marty {
     return frames;
   }
 
-  private threadFrames() : Phaser.Types.Animations.AnimationFrame[] {
+  private threadFrames() : AnimationFrame[] {
     var frames = [];
     for (var i = 50; i < 61; i++) {
       frames.push({key: SPRITE_NAME, frame: i});
