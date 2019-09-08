@@ -29,10 +29,13 @@ export class TitleScene extends Phaser.Scene {
         }
       }
     );
+    this.cursors.down.onDown = (e) => {
+      this.start = true;
+    };
   }
 
   update(): void {
-    if (this.start) {
+    if (this.start === true) {
       this.scene.start('GameScene');
     }
   }

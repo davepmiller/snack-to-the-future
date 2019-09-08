@@ -1,7 +1,6 @@
 import * as Phaser from 'phaser';
 
 export class BootScene extends Phaser.Scene {
-  // graphics
   private loadingBar: Phaser.GameObjects.Graphics;
   private progressBar: Phaser.GameObjects.Graphics;
 
@@ -18,7 +17,7 @@ export class BootScene extends Phaser.Scene {
       "progress",
       (value) => {
         this.progressBar.clear();
-        this.progressBar.fillStyle(0x88e453, 1);
+        this.progressBar.fillStyle(0xd3d3d3, 1);
         this.progressBar.fillRect(
           this.cameras.main.width / 4,
           this.cameras.main.height / 2 - 16,
@@ -32,10 +31,7 @@ export class BootScene extends Phaser.Scene {
     this.load.on(
       "complete",
       () => {
-        // this.animationHelperInstance = new AnimationHelper(
-        //   this,
-        //   this.cache.json.get("animationJSON")
-        // );
+        console.log('Done loading assets');
         this.progressBar.destroy();
         this.loadingBar.destroy();
       },

@@ -1,5 +1,5 @@
 import * as Phaser from 'phaser';
-import {GameScene} from './gameScene';
+import {GameScene} from './scenes/gameScene';
 
 type Sprite = Phaser.Physics.Arcade.Sprite;
 type Gamepad = Phaser.Input.Gamepad.Gamepad;
@@ -10,6 +10,7 @@ const SCALE_X = 0.25;
 const SCALE_Y = 0.25;
 const SPRITE_NAME = 'marty';
 const FRAME_RATE = 15;
+const VELOCITY_X = 1000;
 
 export class Marty {
   sprite: Sprite;
@@ -63,7 +64,7 @@ export class Marty {
   private createSprite() : void {
     const pos = {x: window.innerWidth / 2.5, y: window.innerHeight}
     this.sprite = this.scene.physics.add.sprite(pos.x, pos.y, SPRITE_NAME);
-    this.sprite.setVelocity(1000, 0);
+    this.sprite.setVelocity(VELOCITY_X, 0);
     const cameraOffsetY = window.innerHeight/2-this.sprite.height/2*SCALE_Y
     this.scene.cameras.main.startFollow(
       this.sprite, undefined, undefined, undefined, undefined, cameraOffsetY);
@@ -109,16 +110,10 @@ export class Marty {
     var frames = [];
     for (var i = 9; i < 26; i++) {
       frames.push({key: SPRITE_NAME, frame: i});
-      // if (i === 17) {
-        // frames.push({key: SPRITE_NAME, frame: i});
-      // }
       if (i === 18) {
         frames.push({key: SPRITE_NAME, frame: i});
         frames.push({key: SPRITE_NAME, frame: i});
       }
-      // if (i === 19) {
-        // frames.push({key: SPRITE_NAME, frame: i});
-      // }
     }
 
     return frames;

@@ -1,5 +1,5 @@
 import * as Phaser from 'phaser';
-import {GameScene} from './gameScene';
+import {GameScene} from './scenes/gameScene';
 type Sprite = Phaser.Physics.Arcade.Sprite;
 type AnimationFrame = Phaser.Types.Animations.AnimationFrame;
 type AnimationManager = Phaser.Animations.AnimationManager;

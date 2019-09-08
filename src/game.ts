@@ -1,7 +1,7 @@
 import 'phaser';
-import {BootScene} from './bootScene';
-import {TitleScene} from './titleScene';
-import {GameScene} from './gameScene';
+import {BootScene} from './scenes/bootScene';
+import {TitleScene} from './scenes/titleScene';
+import {GameScene} from './scenes/gameScene';
 
 type GameConfig = Phaser.Types.Core.GameConfig;
 

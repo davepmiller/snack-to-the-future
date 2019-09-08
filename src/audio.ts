@@ -1,5 +1,5 @@
 import * as Phaser from 'phaser';
-import {GameScene} from './gameScene';
+import {GameScene} from './scenes/gameScene';
 
 type LoaderPlugin = Phaser.Loader.LoaderPlugin;
 type BaseSoundManager = Phaser.Sound.BaseSoundManager;
