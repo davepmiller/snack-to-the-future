@@ -1,0 +1,38 @@
+{
+  "preload": {
+    "files": [
+      {
+        "type": "spritesheet",
+        "key": "marty",
+        "url": "./assets/sprites/marty.png",
+        "frameConfig": {
+          "frameWidth": 1000,
+          "frameHeight": 1000
+        }
+      },
+      {
+        "type": "spritesheet",
+        "key": "trump",
+        "url": "./assets/sprites/trump.png",
+        "frameConfig": {
+          "frameWidth": 1000,
+          "frameHeight": 1000
+        }
+      },
+      {
+        "type": "spritesheet",
+        "key": "poop",
+        "url": "./assets/sprites/poop.png",
+        "frameConfig": {
+          "frameWidth": 1000,
+          "frameHeight": 1000
+        }
+      },
+      {
+        "type": "image",
+        "key": "startScreen",
+        "url": "./assets/sprites/startScreen.png"
+      }
+    ]
+  }
+}

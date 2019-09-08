@@ -1,5 +1,6 @@
 import * as Phaser from 'phaser';
-import {GameScene} from './main';
+import {GameScene} from './gameScene';
+
 type Sprite = Phaser.Physics.Arcade.Sprite;
 type Gamepad = Phaser.Input.Gamepad.Gamepad;
 type Button = Phaser.Input.Gamepad.Button;
@@ -7,10 +8,8 @@ type AnimationFrame = Phaser.Types.Animations.AnimationFrame;
 
 const SCALE_X = 0.25;
 const SCALE_Y = 0.25;
-const BOUNCE = 0.2;
 const SPRITE_NAME = 'marty';
-const ASSET_PATH = 'assets/sprites/marty.png';
-const FRAME_SIZE = {frameWidth: 1000, frameHeight: 1000};
+const FRAME_RATE = 15;
 
 export class Marty {
   sprite: Sprite;
@@ -18,34 +17,26 @@ export class Marty {
 
   constructor(scene: GameScene) {
     this.scene = scene;
-    this.scene.load.spritesheet(SPRITE_NAME, ASSET_PATH, FRAME_SIZE);
   }
 
-  public create() {
+  public create() : void {
     this.createSprite();
     this.createAnimations();
+    this.createAnimationCallbacks();
     this.createInputHandling();
     this.cruise();
   }
-
-  public update() {}
 
   private cruise(): void {
     this.sprite.anims.play('cruise', true);
   }
 
   private ollie(): void {
-    this.sprite.anims.play('ollie', true)
-      .on('animationcomplete', () => {
-        this.cruise();
-      });
+    this.sprite.anims.play('ollie', true);
   }
 
   private thread(): void {
-    this.sprite.anims.play('thread', true)
-      .on('animationcomplete', () => {
-        this.cruise();
-      });
+    this.sprite.anims.play('thread', true);
   }
 
   private createInputHandling() : void {
@@ -60,7 +51,6 @@ export class Marty {
       }
     );
 
-
     this.scene.cursors.space.onDown = (e) => {
       this.ollie();
     }
@@ -73,8 +63,11 @@ export class Marty {
   private createSprite() : void {
     const pos = {x: window.innerWidth / 2.5, y: window.innerHeight}
     this.sprite = this.scene.physics.add.sprite(pos.x, pos.y, SPRITE_NAME);
+    this.sprite.setVelocity(1000, 0);
+    const cameraOffsetY = window.innerHeight/2-this.sprite.height/2*SCALE_Y
+    this.scene.cameras.main.startFollow(
+      this.sprite, undefined, undefined, undefined, undefined, cameraOffsetY);
     this.sprite.setScale(SCALE_X, SCALE_Y);
-    this.sprite.setBounce(BOUNCE);
     this.sprite.setCollideWorldBounds(true);
   }
 
@@ -82,19 +75,20 @@ export class Marty {
     this.scene.anims.create({
       key: 'cruise',
       frames: this.cruiseFrames(),
-      frameRate: 15,
+      frameRate: FRAME_RATE,
+      repeat: -1,
     });
 
     this.scene.anims.create({
       key: 'ollie',
       frames: this.ollieFrames(),
-      frameRate: 15
+      frameRate: FRAME_RATE,
     });
 
     this.scene.anims.create({
       key: 'thread',
       frames: this.threadFrames(),
-      frameRate: 15
+      frameRate: FRAME_RATE,
     });
   }
 
@@ -115,6 +109,16 @@ export class Marty {
     var frames = [];
     for (var i = 9; i < 26; i++) {
       frames.push({key: SPRITE_NAME, frame: i});
+      // if (i === 17) {
+        // frames.push({key: SPRITE_NAME, frame: i});
+      // }
+      if (i === 18) {
+        frames.push({key: SPRITE_NAME, frame: i});
+        frames.push({key: SPRITE_NAME, frame: i});
+      }
+      // if (i === 19) {
+        // frames.push({key: SPRITE_NAME, frame: i});
+      // }
     }
 
     return frames;
@@ -127,5 +131,23 @@ export class Marty {
     }
 
     return frames;
+  }
+
+  private createAnimationCallbacks() : void {
+    const jumpOffset = -this.sprite.height*2;
+    this.sprite.on('animationstart-ollie', () => {
+      this.sprite.body.setOffset(0, jumpOffset);
+    });
+    this.sprite.on('animationcomplete-ollie', () => {
+      this.sprite.body.setOffset(0, 0);
+      this.cruise();
+    });
+    this.sprite.on('animationstart-thread', () => {
+      this.sprite.body.setOffset(0, jumpOffset);
+    });
+    this.sprite.on('animationcomplete-thread', () => {
+      this.sprite.body.setOffset(0, 0);
+      this.cruise();;
+    });
   }
 };

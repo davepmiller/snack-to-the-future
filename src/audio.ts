@@ -1,10 +1,14 @@
 import * as Phaser from 'phaser';
+import {GameScene} from './gameScene';
+
+type LoaderPlugin = Phaser.Loader.LoaderPlugin;
+type BaseSoundManager = Phaser.Sound.BaseSoundManager;
 
 export class Audio {
   music: Phaser.Sound.BaseSound;
   
-  constructor (pluginLoader: Phaser.Loader.LoaderPlugin) {
-    pluginLoader.audio(
+  constructor (scene: GameScene) {
+    scene.load.audio(
       'power_of_love', [
         'assets/audio/power_of_love.mp3',
         'assets/audio/power_of_love.ogg'
@@ -12,11 +16,11 @@ export class Audio {
     )
   }
 
-  public create(soundManager: Phaser.Sound.BaseSoundManager) : void {
+  public create(soundManager: BaseSoundManager) : void {
     this.music = soundManager.add('power_of_love', {loop: true});
   }
 
   public play() : void {
-    this.music.play;
+    this.music.play();
   }
 }
