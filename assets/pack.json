@@ -29,6 +29,15 @@
         }
       },
       {
+        "type": "spritesheet",
+        "key": "gameOver",
+        "url": "./assets/sprites/gameOver.png",
+        "frameConfig": {
+          "frameWidth": 820,
+          "frameHeight": 820
+        }
+      },
+      {
         "type": "image",
         "key": "startScreen",
         "url": "./assets/sprites/startScreen.png"

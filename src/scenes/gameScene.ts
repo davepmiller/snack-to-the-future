@@ -32,21 +32,20 @@ export class GameScene extends Phaser.Scene {
   create(): void {
     this.cursors = this.input.keyboard.createCursorKeys();
     this.marty.create();
-    // this.trump.create();
-    // this.poop.create();
-    // var collider = this.physics.add.collider(this.marty.sprite, this.poop.sprite);
-    // collider.active = false;
-    // this.physics.add.collider(this.marty.sprite, this.poop.sprite, this.playerPoopCollision, null, this);
-    this.physics.add.overlap(this.marty.sprite, this.poop.sprite, this.playerPoopCollision, null, this);
+    this.trump.create();
+    this.poop.create();
+    this.physics.add.overlap(this.marty.sprite, this.poop.sprite, this.poopCollision, null, this);
+    this.physics.add.overlap(this.trump.sprite, this.poop.sprite, this.poopCollision, null, this);
     this.audio.create(this.sound);
     this.audio.play();
   }
 
   update(): void {
-    this.marty.sprite.setVelocityX(1000);
+    this.marty.update();
+    this.poop.update();
   }
 
-  playerPoopCollision(marty: Sprite, poop: Sprite): void {
+  poopCollision(char: Sprite, poop: Sprite): void {
     this.physics.pause();
     poop.anims.play('splat');
   }

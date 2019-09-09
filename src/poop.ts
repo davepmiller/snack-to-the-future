@@ -6,6 +6,7 @@ type Sprite = Phaser.Physics.Arcade.Sprite;
 const SCALE_X = 0.25;
 const SCALE_Y = 0.25;
 const SPRITE_NAME = 'poop';
+const VELOCITY_X = 500;
 
 export class Poop {
   sprite: Sprite;
@@ -22,6 +23,12 @@ export class Poop {
     this.playAnimation();
   }
 
+  public update(): void {
+    if (this.sprite) {
+      this.sprite.setVelocityX(VELOCITY_X * -1);
+    }
+  }
+
   private playAnimation(): void {
     this.sprite.anims.play('chillin', true);
   }
@@ -29,15 +36,19 @@ export class Poop {
   private createSprite() : void {
     const pos = {x: window.innerWidth - 100, y: window.innerHeight}
     this.sprite = this.scene.physics.add.sprite(pos.x, pos.y, SPRITE_NAME);
-    // adjust physics body for collisions
-    this.sprite.body.setOffset(this.sprite.width/2, 0);
     this.sprite.setScale(SCALE_X, SCALE_Y);
     this.sprite.setCollideWorldBounds(true);
     this.sprite.on('animationcomplete-splat', () => {
       this.sprite.disableBody(true, true);
       this.sprite.destroy();
+      this.sprite = null;
       this.scene.physics.resume();
+      this.scene.scene.start('GameOverScene');
     });
+    // adjust physics body for collisions
+    this.sprite.body.setSize(this.sprite.width/2, this.sprite.height/2);
+    this.sprite.body.setOffset(this.sprite.width/2, this.sprite.height/2);
+    this.sprite.setVelocityX(VELOCITY_X * -1);
   }
 
   private createAnimations() : void {

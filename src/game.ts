@@ -2,6 +2,7 @@ import 'phaser';
 import {BootScene} from './scenes/bootScene';
 import {TitleScene} from './scenes/titleScene';
 import {GameScene} from './scenes/gameScene';
+import {GameOverScene} from './scenes/gameOverScene';
 
 type GameConfig = Phaser.Types.Core.GameConfig;
 
@@ -17,7 +18,7 @@ export const config: GameConfig = {
     default: 'arcade',
     arcade: {
       gravity: {
-        // y: 475
+        // y: 800
       },
       debug: true
     },
@@ -26,7 +27,7 @@ export const config: GameConfig = {
     gamepad: true
   },
   backgroundColor: '#000000',
-  scene: [BootScene, TitleScene, GameScene]
+  scene: [BootScene, TitleScene, GameScene, GameOverScene]
 };
 
 export class Game extends Phaser.Game {

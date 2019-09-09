@@ -11,6 +11,9 @@ const SPRITE_NAME = 'trump';
 export class Trump {
   scene: GameScene;
   sprite: Sprite;
+  offsetJumpY: number;
+  offsetX: number;
+  offsetY: number;
 
   constructor(gameScene: GameScene) {
     this.scene = gameScene;
@@ -38,10 +41,14 @@ export class Trump {
   private createSprite() : void {
     const pos = {x: window.innerWidth / 10, y: window.innerHeight}
     this.sprite = this.scene.physics.add.sprite(pos.x, pos.y, SPRITE_NAME);
-    this.sprite.setVelocity(1000, 0);
     this.sprite.setScale(SCALE_X, SCALE_Y);
     this.sprite.setCollideWorldBounds(true);
-    this.sprite.body.checkCollision.none = true;
+    // this.sprite.body.checkCollision.none = true;
+    this.offsetJumpY = -this.sprite.height*2;
+    this.offsetY = this.sprite.height/2;
+    this.offsetX = this.sprite.width/10;
+    this.sprite.body.setSize(this.sprite.width/2, this.offsetY);
+    this.sprite.body.setOffset(this.offsetX, this.offsetY);
   }
 
   private cruiseFrames() : AnimationFrame[] {

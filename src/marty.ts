@@ -10,11 +10,13 @@ const SCALE_X = 0.25;
 const SCALE_Y = 0.25;
 const SPRITE_NAME = 'marty';
 const FRAME_RATE = 15;
-const VELOCITY_X = 1000;
 
 export class Marty {
   sprite: Sprite;
   scene: GameScene;
+  offsetJumpY: number;
+  offsetX: number;
+  offsetY: number;
 
   constructor(scene: GameScene) {
     this.scene = scene;
@@ -26,6 +28,12 @@ export class Marty {
     this.createAnimationCallbacks();
     this.createInputHandling();
     this.cruise();
+  }
+
+  public update(): void {
+    if (this.sprite.body.touching.down) {
+      this.cruise();
+    }
   }
 
   private cruise(): void {
@@ -64,12 +72,13 @@ export class Marty {
   private createSprite() : void {
     const pos = {x: window.innerWidth / 2.5, y: window.innerHeight}
     this.sprite = this.scene.physics.add.sprite(pos.x, pos.y, SPRITE_NAME);
-    this.sprite.setVelocity(VELOCITY_X, 0);
-    const cameraOffsetY = window.innerHeight/2-this.sprite.height/2*SCALE_Y
-    this.scene.cameras.main.startFollow(
-      this.sprite, undefined, undefined, undefined, undefined, cameraOffsetY);
     this.sprite.setScale(SCALE_X, SCALE_Y);
     this.sprite.setCollideWorldBounds(true);
+    this.offsetJumpY = -this.sprite.height*2;
+    this.offsetY = this.sprite.height/2;
+    this.offsetX = this.sprite.width/10;
+    this.sprite.body.setSize(this.sprite.width/2, this.offsetY);
+    this.sprite.body.setOffset(this.offsetX, this.offsetY);
   }
 
   private createAnimations() : void {
@@ -123,25 +132,28 @@ export class Marty {
     var frames = [];
     for (var i = 50; i < 61; i++) {
       frames.push({key: SPRITE_NAME, frame: i});
+      if (i === 57) {
+        frames.push({key: SPRITE_NAME, frame: i});
+        frames.push({key: SPRITE_NAME, frame: i});
+      }
     }
 
     return frames;
   }
 
   private createAnimationCallbacks() : void {
-    const jumpOffset = -this.sprite.height*2;
     this.sprite.on('animationstart-ollie', () => {
-      this.sprite.body.setOffset(0, jumpOffset);
+      this.sprite.body.setOffset(this.offsetX, this.offsetJumpY);
     });
     this.sprite.on('animationcomplete-ollie', () => {
-      this.sprite.body.setOffset(0, 0);
+      this.sprite.body.setOffset(this.offsetX, this.offsetY);
       this.cruise();
     });
     this.sprite.on('animationstart-thread', () => {
-      this.sprite.body.setOffset(0, jumpOffset);
+      this.sprite.body.setOffset(this.offsetX, this.offsetJumpY);
     });
     this.sprite.on('animationcomplete-thread', () => {
-      this.sprite.body.setOffset(0, 0);
+      this.sprite.body.setOffset(this.offsetX, this.offsetY);
       this.cruise();;
     });
   }
