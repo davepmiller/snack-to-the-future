@@ -1,12 +1,12 @@
 import * as Phaser from 'phaser';
-import {GameScene} from './scenes/gameScene';
+import {GameScene} from './scene/gameScene';
 
 type Sprite = Phaser.Physics.Arcade.Sprite;
 
 const SCALE_X = 0.25;
 const SCALE_Y = 0.25;
 const SPRITE_NAME = 'poop';
-const VELOCITY_X = 500;
+const VELOCITY_X = 400;
 
 export class Poop {
   sprite: Sprite;
@@ -34,7 +34,8 @@ export class Poop {
   }
  
   private createSprite() : void {
-    const pos = {x: window.innerWidth - 100, y: window.innerHeight}
+    let groundY = this.scene.textures.get('ground').getSourceImage().height;
+    let pos = {x: window.innerWidth - 100, y: window.innerHeight - groundY - 150};
     this.sprite = this.scene.physics.add.sprite(pos.x, pos.y, SPRITE_NAME);
     this.sprite.setScale(SCALE_X, SCALE_Y);
     this.sprite.setCollideWorldBounds(true);
@@ -43,7 +44,8 @@ export class Poop {
       this.sprite.destroy();
       this.sprite = null;
       this.scene.physics.resume();
-      this.scene.scene.start('GameOverScene');
+      // this.scene.audio.stop();
+      // this.scene.scene.start('GameOverScene');
     });
     // adjust physics body for collisions
     this.sprite.body.setSize(this.sprite.width/2, this.sprite.height/2);
@@ -61,7 +63,7 @@ export class Poop {
     this.scene.anims.create({
       key: 'splat',
       frames: this.scene.anims.generateFrameNumbers(SPRITE_NAME, {start: 41, end: 45}),
-      frameRate: 30,
+      frameRate: 15,
       hideOnComplete: true
     })
   }

@@ -1,8 +1,8 @@
 import 'phaser';
-import {BootScene} from './scenes/bootScene';
-import {TitleScene} from './scenes/titleScene';
-import {GameScene} from './scenes/gameScene';
-import {GameOverScene} from './scenes/gameOverScene';
+import {BootScene} from './scene/bootScene';
+import {TitleScene} from './scene/titleScene';
+import {GameScene} from './scene/gameScene';
+import {GameOverScene} from './scene/gameOverScene';
 
 type GameConfig = Phaser.Types.Core.GameConfig;
 
@@ -18,7 +18,7 @@ export const config: GameConfig = {
     default: 'arcade',
     arcade: {
       gravity: {
-        // y: 800
+        y: 100
       },
       debug: true
     },

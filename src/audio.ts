@@ -1,7 +1,6 @@
 import * as Phaser from 'phaser';
-import {GameScene} from './scenes/gameScene';
+import {GameScene} from './scene/gameScene';
 
-type LoaderPlugin = Phaser.Loader.LoaderPlugin;
 type BaseSoundManager = Phaser.Sound.BaseSoundManager;
 
 export class Audio {
@@ -22,5 +21,9 @@ export class Audio {
 
   public play() : void {
     this.music.play();
+  }
+
+  public stop() : void {
+    this.music.stop();
   }
 }

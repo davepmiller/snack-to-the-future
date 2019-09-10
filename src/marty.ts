@@ -1,5 +1,5 @@
 import * as Phaser from 'phaser';
-import {GameScene} from './scenes/gameScene';
+import {GameScene} from './scene/gameScene';
 
 type Sprite = Phaser.Physics.Arcade.Sprite;
 type Gamepad = Phaser.Input.Gamepad.Gamepad;
@@ -70,10 +70,13 @@ export class Marty {
   }
 
   private createSprite() : void {
-    const pos = {x: window.innerWidth / 2.5, y: window.innerHeight}
+    let groundY = this.scene.textures.get('ground').getSourceImage().height;
+    console.log(groundY);
+    let pos = {x: window.innerWidth / 2.5, y: window.innerHeight - groundY - 150};
     this.sprite = this.scene.physics.add.sprite(pos.x, pos.y, SPRITE_NAME);
     this.sprite.setScale(SCALE_X, SCALE_Y);
     this.sprite.setCollideWorldBounds(true);
+    // this.sprite.setDepth(1);
     this.offsetJumpY = -this.sprite.height*2;
     this.offsetY = this.sprite.height/2;
     this.offsetX = this.sprite.width/10;

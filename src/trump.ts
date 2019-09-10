@@ -1,5 +1,5 @@
 import * as Phaser from 'phaser';
-import {GameScene} from './scenes/gameScene';
+import {GameScene} from './scene/gameScene';
 type Sprite = Phaser.Physics.Arcade.Sprite;
 type AnimationFrame = Phaser.Types.Animations.AnimationFrame;
 type AnimationManager = Phaser.Animations.AnimationManager;
@@ -39,7 +39,8 @@ export class Trump {
   }
 
   private createSprite() : void {
-    const pos = {x: window.innerWidth / 10, y: window.innerHeight}
+    let groundY = this.scene.textures.get('ground').getSourceImage().height;
+    let pos = {x: window.innerWidth / 10, y: window.innerHeight - groundY - 150};
     this.sprite = this.scene.physics.add.sprite(pos.x, pos.y, SPRITE_NAME);
     this.sprite.setScale(SCALE_X, SCALE_Y);
     this.sprite.setCollideWorldBounds(true);
