@@ -29,6 +29,11 @@
         }
       },
       {
+        "type": "image",
+        "key": "ground",
+        "url": "./assets/sprites/ground.png"
+      },
+      {
         "type": "spritesheet",
         "key": "gameOver",
         "url": "./assets/sprites/gameOver.png",
