@@ -58,11 +58,6 @@ export class GameScene extends Phaser.Scene {
     this.physics.add.collider(this.poop.sprite, this.ground);
     this.physics.add.overlap(this.marty.sprite, this.poop.sprite, this.poopCollision, null, this);
     this.physics.add.overlap(this.trump.sprite, this.poop.sprite, this.poopCollision, null, this);
-    // var ground = this.physics.add.sprite(0, window.innerHeight, 'ground');
-    // ground.setCollideWorldBounds(true);
-    // this.physics.add.collider(ground, this.trump.sprite);
-    // this.physics.add.collider(ground, this.marty.sprite);
-    // this.physics.add.collider(ground, this.poop.sprite);
     this.audio.create(this.sound);
     this.audio.play();
   }
