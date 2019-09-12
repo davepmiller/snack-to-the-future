@@ -8,7 +8,7 @@ type GameConfig = Phaser.Types.Core.GameConfig;
 
 export const config: GameConfig = {
   title: 'Snack To The Future',
-  url: '',
+  url: 'https://www.pettysnacks.com/',
   version: "1.0",
   type: Phaser.AUTO,
   width: window.innerWidth,
