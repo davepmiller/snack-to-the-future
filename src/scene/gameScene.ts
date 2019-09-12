@@ -1,11 +1,12 @@
 import * as Phaser from 'phaser';
-import {Marty} from '../marty';
-import {Trump} from '../trump';
-import {Poop} from '../poop';
+import {Marty} from '../component/marty';
+import {Trump} from '../component/trump';
+import {Poop} from '../component/poop';
 import {Audio} from '../audio';
 import Midground from '../component/midground';
 import Background from '../component/background';
 import Skyline from '../component/skyline';
+import HealthStatus from '../component/healthStatus';
 // import Ground from '../component/ground';
 
 type CursorKeys = Phaser.Types.Input.Keyboard.CursorKeys;
@@ -23,6 +24,7 @@ export class GameScene extends Phaser.Scene {
   background: Background;
   skyline: Skyline;
   midground: Midground;
+  healthStatus: HealthStatus;
 
   constructor() {
     super({
@@ -37,27 +39,13 @@ export class GameScene extends Phaser.Scene {
     this.marty = new Marty(this);
     this.trump = new Trump(this);
     this.poop = new Poop(this);
-    // this.ground = new Ground(this);
   }
   
   create(): void {
-    this.cameras.main.roundPixels = true;
-    this.background = new Background(this);
-    this.skyline = new Skyline(this);
-    this.midground = new Midground(this);
-    let groundHeight = this.textures.get('ground').getSourceImage().height/2;
-    let y = window.innerHeight - groundHeight;
-    this.ground = this.physics.add.staticGroup();
-    this.ground.create(window.innerWidth / 2, y, 'ground').refreshBody();
-    this.cursors = this.input.keyboard.createCursorKeys();
-    this.marty.create();
-    this.trump.create();
-    this.poop.create();
-    this.physics.add.collider(this.marty.sprite, this.ground, this.groundCollision);
-    this.physics.add.collider(this.trump.sprite, this.ground, this.groundCollision);
-    this.physics.add.collider(this.poop.sprite, this.ground, this.groundCollision);
-    this.physics.add.overlap(this.marty.sprite, this.poop.sprite, this.poopCollision, null, this);
-    this.physics.add.overlap(this.trump.sprite, this.poop.sprite, this.poopCollision, null, this);
+    this.registry.set('health', {trump: 10, marty: 3})
+    this.createBackground();
+    this.createGameObjects();
+    this.createColliders();
     this.audio.create(this.sound);
     this.audio.play();
   }
@@ -67,9 +55,29 @@ export class GameScene extends Phaser.Scene {
     this.midground.parallax();
     this.marty.update();
     this.poop.update();
+    if (!this.poop.sprite.active) {
+      this.poop.replaceSprite();
+    }
+
+    let health = this.registry.get('health');
+    if (health.marty <= 0) {
+      // game over
+      this.audio.stop();
+      this.scene.start('GameOverScene');
+    } else if (health.trump <= 0) {
+      // ending scene
+    }
   }
 
   poopCollision(char: Sprite, poop: Sprite): void {
+    let health = this.registry.get('health');
+    if (char.name === Trump.getSpriteName()) {
+      health.trump--;
+    } else if (char.name === Marty.getSpriteName()) {
+      health.marty--;
+      this.events.emit('MARTY_HIT');
+    }
+    this.registry.set('health', health);
     this.physics.pause();
     poop.anims.play('splat');
   }
@@ -77,9 +85,36 @@ export class GameScene extends Phaser.Scene {
   groundCollision(char: GameObject, ground: GameObject): void {
     let mBody = char.body as Phaser.Physics.Arcade.Body;
     let gBody = ground.body as Phaser.Physics.Arcade.Body;
-    console.log('marty bottom: ' + mBody.bottom + ' ground top: ' + gBody.top);
     if (mBody.bottom > gBody.top) {
       mBody.y -= (mBody.bottom - gBody.top);
     }
+  }
+
+  private createBackground(): void {
+    this.cameras.main.roundPixels = true;
+    this.background = new Background(this);
+    this.healthStatus = new HealthStatus(this);
+    this.skyline = new Skyline(this);
+    this.midground = new Midground(this);
+    
+  }
+
+  private createGameObjects(): void {
+    let groundHeight = this.textures.get('ground').getSourceImage().height/2;
+    let y = window.innerHeight - groundHeight;
+    this.ground = this.physics.add.staticGroup();
+    this.ground.create(window.innerWidth / 2, y, 'ground').refreshBody();
+    this.cursors = this.input.keyboard.createCursorKeys();
+    this.marty.create();
+    this.trump.create();
+    this.poop.create();
+  }
+
+  private createColliders(): void {
+    this.physics.add.collider(this.marty.sprite, this.ground, this.groundCollision);
+    this.physics.add.collider(this.trump.sprite, this.ground, this.groundCollision);
+    this.physics.add.collider(this.poop.sprite, this.ground, this.groundCollision);
+    this.physics.add.overlap(this.marty.sprite, this.poop.sprite, this.poopCollision, null, this);
+    this.physics.add.overlap(this.trump.sprite, this.poop.sprite, this.poopCollision, null, this);
   }
 }

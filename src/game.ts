@@ -17,10 +17,7 @@ export const config: GameConfig = {
   physics: {
     default: 'arcade',
     arcade: {
-      gravity: {
-        // y: 100
-      },
-      debug: true
+      // debug: true
     },
   },
   input: {

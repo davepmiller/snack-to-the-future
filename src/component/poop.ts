@@ -1,5 +1,5 @@
 import * as Phaser from 'phaser';
-import {GameScene} from './scene/gameScene';
+import {GameScene} from '../scene/gameScene';
 
 type Sprite = Phaser.Physics.Arcade.Sprite;
 
@@ -7,6 +7,11 @@ const SCALE_X = 0.25;
 const SCALE_Y = 0.25;
 const SPRITE_NAME = 'poop';
 const VELOCITY_X = 400;
+
+interface Pos {
+  x: number;
+  y: number;
+}
 
 export class Poop {
   sprite: Sprite;
@@ -29,24 +34,33 @@ export class Poop {
     }
   }
 
+  public replaceSprite(): void {
+    let pos = this.getStartingPosition();
+    // this.sprite.setPosition(pos.x, pos.y);
+    this.playAnimation();
+    this.sprite.enableBody(true, pos.x, pos.y, true, true);
+    this.sprite.setActive(true);
+  }
+
+  private getStartingPosition(): Pos {
+    let groundY = this.scene.textures.get('ground').getSourceImage().height;
+    return {x: window.innerWidth - 100, y: window.innerHeight - groundY};
+  }
+
   private playAnimation(): void {
     this.sprite.anims.play('chillin', true);
   }
  
   private createSprite() : void {
-    let groundY = this.scene.textures.get('ground').getSourceImage().height;
-    let pos = {x: window.innerWidth - 100, y: window.innerHeight - groundY};
+    let pos = this.getStartingPosition();
     this.sprite = this.scene.physics.add.sprite(pos.x, pos.y, SPRITE_NAME);
     this.sprite.setScale(SCALE_X, SCALE_Y);
     this.sprite.setCollideWorldBounds(true);
     this.sprite.on('animationcomplete-splat', () => {
       this.sprite.disableBody(true, true);
-      this.sprite.destroy();
-      this.sprite = null;
       this.scene.physics.resume();
-      // this.scene.audio.stop();
-      // this.scene.scene.start('GameOverScene');
     });
+
     // adjust physics body for collisions
     this.sprite.body.setSize(this.sprite.width/2, this.sprite.height/2);
     this.sprite.body.setOffset(this.sprite.width/2, this.sprite.height/2);

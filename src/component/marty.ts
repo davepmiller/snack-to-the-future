@@ -1,5 +1,5 @@
 import * as Phaser from 'phaser';
-import {GameScene} from './scene/gameScene';
+import {GameScene} from '../scene/gameScene';
 
 type Sprite = Phaser.Physics.Arcade.Sprite;
 type Gamepad = Phaser.Input.Gamepad.Gamepad;
@@ -21,7 +21,7 @@ export class Marty {
     this.scene = scene;
   }
 
-  public create() : void {
+  create() : void {
     this.createSprite();
     this.createAnimations();
     this.createAnimationCallbacks();
@@ -29,10 +29,14 @@ export class Marty {
     this.cruise();
   }
 
-  public update(): void {
+  update(): void {
     if (this.sprite.body.touching.down) {
       this.cruise();
     }
+  }
+
+  static getSpriteName(): String {
+    return SPRITE_NAME;
   }
 
   private cruise(): void {

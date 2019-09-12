@@ -1,5 +1,5 @@
 import * as Phaser from 'phaser';
-import {GameScene} from './scene/gameScene';
+import {GameScene} from '../scene/gameScene';
 type Sprite = Phaser.Physics.Arcade.Sprite;
 type AnimationFrame = Phaser.Types.Animations.AnimationFrame;
 type AnimationManager = Phaser.Animations.AnimationManager;
@@ -19,10 +19,14 @@ export class Trump {
     this.scene = gameScene;
   }
 
-  public create() : void {
+  create() : void {
     this.createSprite();
     this.createAnimations(this.scene.anims);
     this.cruise();
+  }
+
+  static getSpriteName(): String {
+    return SPRITE_NAME;
   }
 
   private createAnimations(anims: AnimationManager) {
@@ -42,6 +46,7 @@ export class Trump {
     let groundY = this.scene.textures.get('ground').getSourceImage().height;
     let pos = {x: window.innerWidth / 10, y: window.innerHeight - groundY};
     this.sprite = this.scene.physics.add.sprite(pos.x, pos.y, SPRITE_NAME);
+    this.sprite.setName(SPRITE_NAME);
     this.sprite.setScale(SCALE_X, SCALE_Y);
     this.sprite.setCollideWorldBounds(true);
     this.offsetJumpY = -this.sprite.height*2;

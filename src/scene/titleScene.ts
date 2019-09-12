@@ -49,11 +49,7 @@ export class TitleScene extends Phaser.Scene {
     this.cursors = this.input.keyboard.createCursorKeys();
     this.input.gamepad.on(
       'down',
-      (pad: Gamepad) => {
-        if (pad.A) {
-          this.start = true;
-        }
-      }
+      () => this.start = true
     );
     this.cursors.down.onDown = (e) => {
       this.start = true;
