@@ -35,7 +35,7 @@ export class Poop {
  
   private createSprite() : void {
     let groundY = this.scene.textures.get('ground').getSourceImage().height;
-    let pos = {x: window.innerWidth - 100, y: window.innerHeight - groundY - 150};
+    let pos = {x: window.innerWidth - 100, y: window.innerHeight - groundY};
     this.sprite = this.scene.physics.add.sprite(pos.x, pos.y, SPRITE_NAME);
     this.sprite.setScale(SCALE_X, SCALE_Y);
     this.sprite.setCollideWorldBounds(true);

@@ -3,7 +3,6 @@ import {GameScene} from './scene/gameScene';
 
 type Sprite = Phaser.Physics.Arcade.Sprite;
 type Gamepad = Phaser.Input.Gamepad.Gamepad;
-type Button = Phaser.Input.Gamepad.Button;
 type AnimationFrame = Phaser.Types.Animations.AnimationFrame;
 
 const SCALE_X = 0.25;
@@ -41,6 +40,7 @@ export class Marty {
   }
 
   private ollie(): void {
+
     this.sprite.anims.play('ollie', true);
   }
 
@@ -51,7 +51,7 @@ export class Marty {
   private createInputHandling() : void {
     this.scene.input.gamepad.on(
       'down',
-      (pad: Gamepad, button: Button, value: number) => {
+      (pad: Gamepad) => {
         if (pad.A) {
           this.ollie();
         } else if (pad.B) {
@@ -71,12 +71,12 @@ export class Marty {
 
   private createSprite() : void {
     let groundY = this.scene.textures.get('ground').getSourceImage().height;
-    console.log(groundY);
-    let pos = {x: window.innerWidth / 2.5, y: window.innerHeight - groundY - 150};
+    let pos = {x: window.innerWidth / 2.5, y: window.innerHeight - groundY};
     this.sprite = this.scene.physics.add.sprite(pos.x, pos.y, SPRITE_NAME);
+    this.sprite.setName(SPRITE_NAME);
+    this.sprite.body.customSeparateY = true;
     this.sprite.setScale(SCALE_X, SCALE_Y);
     this.sprite.setCollideWorldBounds(true);
-    // this.sprite.setDepth(1);
     this.offsetJumpY = -this.sprite.height*2;
     this.offsetY = this.sprite.height/2;
     this.offsetX = this.sprite.width/10;

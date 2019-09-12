@@ -11,6 +11,7 @@ import Skyline from '../component/skyline';
 type CursorKeys = Phaser.Types.Input.Keyboard.CursorKeys;
 type Sprite = Phaser.Physics.Arcade.Sprite;
 type Ground = Phaser.Physics.Arcade.StaticGroup;
+type GameObject = Phaser.GameObjects.GameObject;
 
 export class GameScene extends Phaser.Scene {
   audio: Audio;
@@ -44,18 +45,17 @@ export class GameScene extends Phaser.Scene {
     this.background = new Background(this);
     this.skyline = new Skyline(this);
     this.midground = new Midground(this);
-    let y = window.innerHeight - this.textures.get('ground').getSourceImage().height/2;
-    // super(scene, window.innerWidth / 2, y, 0, 0, 'ground');
-    this.ground = this.physics.add.staticGroup();//(window.innerWidth / 2, y, 'ground').setImmovable(true);//.refreshBody();
+    let groundHeight = this.textures.get('ground').getSourceImage().height/2;
+    let y = window.innerHeight - groundHeight;
+    this.ground = this.physics.add.staticGroup();
     this.ground.create(window.innerWidth / 2, y, 'ground').refreshBody();
-    // this.ground = new Ground(this);
     this.cursors = this.input.keyboard.createCursorKeys();
     this.marty.create();
     this.trump.create();
     this.poop.create();
-    this.physics.add.collider(this.marty.sprite, this.ground);
-    this.physics.add.collider(this.trump.sprite, this.ground);
-    this.physics.add.collider(this.poop.sprite, this.ground);
+    this.physics.add.collider(this.marty.sprite, this.ground, this.groundCollision);
+    this.physics.add.collider(this.trump.sprite, this.ground, this.groundCollision);
+    this.physics.add.collider(this.poop.sprite, this.ground, this.groundCollision);
     this.physics.add.overlap(this.marty.sprite, this.poop.sprite, this.poopCollision, null, this);
     this.physics.add.overlap(this.trump.sprite, this.poop.sprite, this.poopCollision, null, this);
     this.audio.create(this.sound);
@@ -72,5 +72,14 @@ export class GameScene extends Phaser.Scene {
   poopCollision(char: Sprite, poop: Sprite): void {
     this.physics.pause();
     poop.anims.play('splat');
+  }
+
+  groundCollision(char: GameObject, ground: GameObject): void {
+    let mBody = char.body as Phaser.Physics.Arcade.Body;
+    let gBody = ground.body as Phaser.Physics.Arcade.Body;
+    console.log('marty bottom: ' + mBody.bottom + ' ground top: ' + gBody.top);
+    if (mBody.bottom > gBody.top) {
+      mBody.y -= (mBody.bottom - gBody.top);
+    }
   }
 }

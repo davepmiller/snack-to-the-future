@@ -45,6 +45,11 @@
       },
       {
         "type": "image",
+        "key": "pressToBegin",
+        "url": "./assets/image/pressToBegin.png"
+      },
+      {
+        "type": "image",
         "key": "ground",
         "url": "./assets/image/ground.png"
       },
