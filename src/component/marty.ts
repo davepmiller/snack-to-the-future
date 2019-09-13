@@ -111,11 +111,12 @@ export class Marty {
 
   private cruiseFrames() : AnimationFrame[] {
     var frames = [];
-    for (var i = 0; i < 9; i++) {
+    for (let i = 0; i < 9; i++) {
+      frames.push({key: SPRITE_NAME, frame: i});
       frames.push({key: SPRITE_NAME, frame: i});
     }
 
-    for (var i = 21; i < 53; i++) {
+    for (let i = 34; i < 53; i++) {
       frames.push({key: SPRITE_NAME, frame: i});
     }
 
