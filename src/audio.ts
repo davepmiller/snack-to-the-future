@@ -15,15 +15,15 @@ export class Audio {
     )
   }
 
-  public create(soundManager: BaseSoundManager) : void {
+  public create(soundManager: BaseSoundManager): void {
     this.music = soundManager.add('power_of_love', {loop: true});
   }
 
-  public play() : void {
+  public play(): void {
     this.music.play();
   }
 
-  public stop() : void {
+  public stop(): void {
     this.music.stop();
   }
 }

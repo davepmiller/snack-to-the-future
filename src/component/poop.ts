@@ -5,7 +5,7 @@ type Sprite = Phaser.Physics.Arcade.Sprite;
 
 const SCALE_X = 0.25;
 const SCALE_Y = 0.25;
-const SPRITE_NAME = 'poop';
+const SPRITE_KEY = 'poop';
 const VELOCITY_X = 400;
 
 interface Pos {
@@ -22,7 +22,7 @@ export class Poop {
     this.scene = scene;
   }
 
-  public create() : void {
+  public create(): void {
     this.createSprite();
     this.createAnimations();
     this.playAnimation();
@@ -51,9 +51,9 @@ export class Poop {
     this.sprite.anims.play('chillin', true);
   }
  
-  private createSprite() : void {
+  private createSprite(): void {
     let pos = this.getStartingPosition();
-    this.sprite = this.scene.physics.add.sprite(pos.x, pos.y, SPRITE_NAME);
+    this.sprite = this.scene.physics.add.sprite(pos.x, pos.y, SPRITE_KEY);
     this.sprite.setScale(SCALE_X, SCALE_Y);
     this.sprite.setCollideWorldBounds(true);
     this.sprite.on('animationcomplete-splat', () => {
@@ -67,16 +67,16 @@ export class Poop {
     this.sprite.setVelocityX(VELOCITY_X * -1);
   }
 
-  private createAnimations() : void {
+  private createAnimations(): void {
     this.scene.anims.create({
       key: 'chillin',
-      frames: this.scene.anims.generateFrameNumbers(SPRITE_NAME, {start: 0, end: 40}),
+      frames: this.scene.anims.generateFrameNumbers(SPRITE_KEY, {start: 0, end: 40}),
       frameRate: 15,
       repeat: -1,
     });
     this.scene.anims.create({
       key: 'splat',
-      frames: this.scene.anims.generateFrameNumbers(SPRITE_NAME, {start: 41, end: 45}),
+      frames: this.scene.anims.generateFrameNumbers(SPRITE_KEY, {start: 41, end: 45}),
       frameRate: 15,
       hideOnComplete: true
     })

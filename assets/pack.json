@@ -1,8 +1,7 @@
 {
 
   "preload": {
-    "files": [
-      {
+    "files": [{
         "type": "spritesheet",
         "key": "marty",
         "url": "./assets/sprite/marty.png",
@@ -10,8 +9,7 @@
           "frameWidth": 1000,
           "frameHeight": 1000
         }
-      },
-      {
+      },{
         "type": "spritesheet",
         "key": "trump",
         "url": "./assets/sprite/trump.png",
@@ -19,8 +17,7 @@
           "frameWidth": 1000,
           "frameHeight": 1000
         }
-      },
-      {
+      },{
         "type": "spritesheet",
         "key": "poop",
         "url": "./assets/sprite/poop.png",
@@ -28,8 +25,15 @@
           "frameWidth": 1000,
           "frameHeight": 1000
         }
-      },
-      {
+      },{
+        "type": "spritesheet",
+        "key": "hat",
+        "url": "./assets/sprite/hat.png",
+        "frameConfig": {
+          "frameWidth": 375,
+          "frameHeight": 375
+        }
+      },{
         "type": "spritesheet",
         "key": "gameOver",
         "url": "./assets/sprite/gameOver.png",
@@ -37,33 +41,27 @@
           "frameWidth": 820,
           "frameHeight": 820
         }
-      },
-      {
+      },{
         "type": "image",
         "key": "startScreen",
         "url": "./assets/image/startScreen.png"
-      },
-      {
+      },{
         "type": "image",
         "key": "pressToBegin",
         "url": "./assets/image/pressToBegin.png"
-      },
-      {
+      },{
         "type": "image",
         "key": "ground",
         "url": "./assets/image/ground.png"
-      },
-      {
+      },{
         "type": "image",
         "key": "skyline",
         "url": "./assets/image/skyline.png"
-      },
-      {
+      },{
         "type": "image",
         "key": "midground",
         "url": "./assets/image/midground.png"
-      },
-      {
+      },{
         "type": "image",
         "key": "background",
         "url": "./assets/image/background.png"

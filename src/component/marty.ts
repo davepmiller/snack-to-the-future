@@ -7,7 +7,7 @@ type AnimationFrame = Phaser.Types.Animations.AnimationFrame;
 
 const SCALE_X = 0.25;
 const SCALE_Y = 0.25;
-const SPRITE_NAME = 'marty';
+const SPRITE_KEY = 'marty';
 const FRAME_RATE = 15;
 
 export class Marty {
@@ -21,7 +21,7 @@ export class Marty {
     this.scene = scene;
   }
 
-  create() : void {
+  create(): void {
     this.createSprite();
     this.createAnimations();
     this.createAnimationCallbacks();
@@ -36,7 +36,7 @@ export class Marty {
   }
 
   static getSpriteName(): String {
-    return SPRITE_NAME;
+    return SPRITE_KEY;
   }
 
   private cruise(): void {
@@ -52,7 +52,7 @@ export class Marty {
     this.sprite.anims.play('thread', true);
   }
 
-  private createInputHandling() : void {
+  private createInputHandling(): void {
     this.scene.input.gamepad.on(
       'down',
       (pad: Gamepad) => {
@@ -73,11 +73,11 @@ export class Marty {
     }
   }
 
-  private createSprite() : void {
+  private createSprite(): void {
     let groundY = this.scene.textures.get('ground').getSourceImage().height;
     let pos = {x: window.innerWidth / 2.5, y: window.innerHeight - groundY};
-    this.sprite = this.scene.physics.add.sprite(pos.x, pos.y, SPRITE_NAME);
-    this.sprite.setName(SPRITE_NAME);
+    this.sprite = this.scene.physics.add.sprite(pos.x, pos.y, SPRITE_KEY);
+    this.sprite.setName(SPRITE_KEY);
     this.sprite.body.customSeparateY = true;
     this.sprite.setScale(SCALE_X, SCALE_Y);
     this.sprite.setCollideWorldBounds(true);
@@ -88,7 +88,7 @@ export class Marty {
     this.sprite.body.setOffset(this.offsetX, this.offsetY);
   }
 
-  private createAnimations() : void {
+  private createAnimations(): void {
     this.scene.anims.create({
       key: 'cruise',
       frames: this.cruiseFrames(),
@@ -109,47 +109,47 @@ export class Marty {
     });
   }
 
-  private cruiseFrames() : AnimationFrame[] {
+  private cruiseFrames(): AnimationFrame[] {
     var frames = [];
     for (let i = 0; i < 9; i++) {
-      frames.push({key: SPRITE_NAME, frame: i});
-      frames.push({key: SPRITE_NAME, frame: i});
+      frames.push({key: SPRITE_KEY, frame: i});
+      frames.push({key: SPRITE_KEY, frame: i});
     }
 
     for (let i = 34; i < 53; i++) {
-      frames.push({key: SPRITE_NAME, frame: i});
+      frames.push({key: SPRITE_KEY, frame: i});
     }
 
     return frames;
   }
 
-  private ollieFrames() : AnimationFrame[] {
+  private ollieFrames(): AnimationFrame[] {
     var frames = [];
     for (var i = 9; i < 26; i++) {
-      frames.push({key: SPRITE_NAME, frame: i});
+      frames.push({key: SPRITE_KEY, frame: i});
       if (i === 18) {
-        frames.push({key: SPRITE_NAME, frame: i});
-        frames.push({key: SPRITE_NAME, frame: i});
+        frames.push({key: SPRITE_KEY, frame: i});
+        frames.push({key: SPRITE_KEY, frame: i});
       }
     }
 
     return frames;
   }
 
-  private threadFrames() : AnimationFrame[] {
+  private threadFrames(): AnimationFrame[] {
     var frames = [];
     for (var i = 50; i < 61; i++) {
-      frames.push({key: SPRITE_NAME, frame: i});
+      frames.push({key: SPRITE_KEY, frame: i});
       if (i === 57) {
-        frames.push({key: SPRITE_NAME, frame: i});
-        frames.push({key: SPRITE_NAME, frame: i});
+        frames.push({key: SPRITE_KEY, frame: i});
+        frames.push({key: SPRITE_KEY, frame: i});
       }
     }
 
     return frames;
   }
 
-  private createAnimationCallbacks() : void {
+  private createAnimationCallbacks(): void {
     this.sprite.on('animationstart-ollie', () => {
       this.sprite.body.setOffset(this.offsetX, this.offsetJumpY);
     });

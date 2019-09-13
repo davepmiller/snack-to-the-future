@@ -55,6 +55,7 @@ export class GameScene extends Phaser.Scene {
     this.midground.parallax();
     this.marty.update();
     this.poop.update();
+    this.trump.update();
     if (!this.poop.sprite.active) {
       this.poop.replaceSprite();
     }

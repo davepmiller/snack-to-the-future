@@ -10,14 +10,14 @@ export const config: GameConfig = {
   title: 'Snack To The Future',
   url: 'https://www.pettysnacks.com/',
   version: "1.0",
-  type: Phaser.AUTO,
+  type: Phaser.WEBGL,
   width: window.innerWidth,
   height: window.innerHeight,
   parent: 'game',
   physics: {
     default: 'arcade',
     arcade: {
-      // debug: true
+      debug: true
     },
   },
   input: {

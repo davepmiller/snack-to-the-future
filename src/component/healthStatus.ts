@@ -23,7 +23,6 @@ export default class HealthStatus {
 
   public martyHit(): void {
     let health = this.scene.registry.get('health').marty;
-    console.log(health);
     this.martyHealth.destroy();
     this.martyHealth = this.scene.add.graphics();
     if (health === 2) {
