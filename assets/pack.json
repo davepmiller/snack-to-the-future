@@ -65,6 +65,18 @@
         "type": "image",
         "key": "background",
         "url": "./assets/image/background.png"
+      },{
+        "type": "image",
+        "key": "martyHealth",
+        "url": "./assets/image/martyHealth.png",
+        "frameConfig": {
+          "frameWidth": 1000,
+          "frameHeight": 1000
+        }
+      },{
+        "type": "image",
+        "key": "trumpHealth",
+        "url": "./assets/image/trumpHealth.png"
       }
     ]
   }

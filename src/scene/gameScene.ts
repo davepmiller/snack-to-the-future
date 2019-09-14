@@ -7,12 +7,14 @@ import Midground from '../component/midground';
 import Background from '../component/background';
 import Skyline from '../component/skyline';
 import HealthStatus from '../component/healthStatus';
-// import Ground from '../component/ground';
 
 type CursorKeys = Phaser.Types.Input.Keyboard.CursorKeys;
 type Sprite = Phaser.Physics.Arcade.Sprite;
 type Ground = Phaser.Physics.Arcade.StaticGroup;
 type GameObject = Phaser.GameObjects.GameObject;
+
+const MARTY_HEALTH = 3;
+const TRUMP_HEALTH = 5;
 
 export class GameScene extends Phaser.Scene {
   audio: Audio;
@@ -42,7 +44,7 @@ export class GameScene extends Phaser.Scene {
   }
   
   create(): void {
-    this.registry.set('health', {trump: 10, marty: 3})
+    this.registry.set('health', {trump: TRUMP_HEALTH, marty: MARTY_HEALTH});
     this.createBackground();
     this.createGameObjects();
     this.createColliders();
@@ -62,11 +64,11 @@ export class GameScene extends Phaser.Scene {
 
     let health = this.registry.get('health');
     if (health.marty <= 0) {
-      // game over
       this.audio.stop();
       this.scene.start('GameOverScene');
     } else if (health.trump <= 0) {
-      // ending scene
+      this.audio.stop();
+      this.scene.start('GameOverScene');
     }
   }
 
@@ -74,6 +76,7 @@ export class GameScene extends Phaser.Scene {
     let health = this.registry.get('health');
     if (char.name === Trump.getSpriteName()) {
       health.trump--;
+      this.events.emit('TRUMP_HIT');
     } else if (char.name === Marty.getSpriteName()) {
       health.marty--;
       this.events.emit('MARTY_HIT');
@@ -81,6 +84,10 @@ export class GameScene extends Phaser.Scene {
     this.registry.set('health', health);
     this.physics.pause();
     poop.anims.play('splat');
+  }
+
+  hatCollision(char: Sprite, hat: Sprite): void {
+
   }
 
   groundCollision(char: GameObject, ground: GameObject): void {
@@ -117,5 +124,7 @@ export class GameScene extends Phaser.Scene {
     this.physics.add.collider(this.poop.sprite, this.ground, this.groundCollision);
     this.physics.add.overlap(this.marty.sprite, this.poop.sprite, this.poopCollision, null, this);
     this.physics.add.overlap(this.trump.sprite, this.poop.sprite, this.poopCollision, null, this);
+    this.physics.add.overlap(this.trump.sprite, this.trump.hat);//,  this.hatCollision, null, this);
+    this.physics.add.overlap(this.marty.sprite, this.trump.hat, this.hatCollision, null, this);
   }
 }

@@ -9,11 +9,13 @@ const SPRITE_KEY = 'trump';
 const FRAME_RATE = 15;
 const HAT_KEY = 'hat';
 const HAT_VELOCITY = 500;
-const CRUISE_KEY = 'CRUISE_KEY';
-const THROW_KEY = 'THROW_KEY';
+const CRUISE_KEY = 'trumpCruise';
+const THROW_KEY = 'trumpThrow';
+const SPLAT_KEY = 'splat';
 const ANIMATION_COMPLETE = 'animationcomplete-';
 const THROW_COMPLETE = ANIMATION_COMPLETE + THROW_KEY;
-const CRUISE_COMPLETE = ANIMATION_COMPLETE + CRUISE_KEY;
+// const CRUISE_COMPLETE = ANIMATION_COMPLETE + CRUISE_KEY;
+const SPLAT_COMPLETE = ANIMATION_COMPLETE + SPLAT_KEY;
 const GROUND_KEY = 'ground';
 
 export class Trump {
@@ -23,6 +25,7 @@ export class Trump {
   offsetJumpY: number;
   offsetX: number;
   offsetY: number;
+  doLaunch: boolean;
 
   constructor(gameScene: GameScene) {
     this.scene = gameScene;
@@ -40,7 +43,12 @@ export class Trump {
     this.cruise();
   }
 
-  update(): void {}
+  update(): void {
+    this.cruise();
+    // if (this.doLaunch) {
+    //   this.launchHat();
+    // }
+  }
 
   private createAnimations() {
     let anims = this.scene.anims;
@@ -76,8 +84,9 @@ export class Trump {
   }
 
   private launchHat(): void {
+    this.doLaunch = false;
     let pos = this.sprite.getRightCenter();
-    this.hat.enableBody(true, pos.x, pos.y, true, true);
+    this.hat.enableBody(true, pos.x, pos.y + this.hat.height, true, true);
     this.hat.setVelocityX(HAT_VELOCITY);
     this.hat.anims.play(HAT_KEY, true);
   }
@@ -99,19 +108,21 @@ export class Trump {
   private createHat(): void {
     let pos = this.sprite.getRightCenter();
     this.hat = this.scene.physics.add.sprite(pos.x, pos.y, HAT_KEY);
+    this.hat.setScale(SCALE_X, SCALE_Y);
     this.hat.disableBody(true, true);
     this.hat.setName(HAT_KEY);
-    this.hat.setScale(SCALE_X, SCALE_Y);
-    this.hat.setOrigin(0, 0);
   }
 
   private createAnimationHandlers(): void {
-    this.sprite.on(CRUISE_COMPLETE, () => {
+    this.sprite.on(SPLAT_COMPLETE, () => {
       this.throw();
-    });
+    })
+    // this.sprite.on(CRUISE_COMPLETE, () => {
+      // this.throw();
+    // });
     this.sprite.on(THROW_COMPLETE, () => {
-      this.launchHat();
-      // this.cruise();
+      this.doLaunch = true;
+      this.cruise();
     });
   }
 
