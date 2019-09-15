@@ -19,10 +19,13 @@ export default class Hat {
   create(): void {
     this.createSprite();
     this.createAnimation();
+    this.launchHat();
   }
 
   update(): void {
-    this.launchHat();
+    if (this.sprite.x >= this.scene.physics.world.bounds.right) {
+      this.sprite.x = this.scene.trump.sprite.getRightCenter().x;
+    }
   }
 
   private createAnimation(): void {
@@ -37,16 +40,16 @@ export default class Hat {
 
   private createSprite(): void {
     let pos = this.scene.trump.sprite.getRightCenter();
-    this.sprite = this.scene.physics.add.sprite(pos.x + 100, pos.y - 150, HAT_KEY)
+    this.sprite = this.scene.physics.add.sprite(pos.x, 300, HAT_KEY)
       .setScale(SCALE_X, SCALE_Y)
-      .disableBody(true, true)
+      // .disableBody(true, true)
       .setName(HAT_KEY);
   }
 
   private launchHat(): void {
     let pos = this.scene.trump.sprite.getRightCenter();
     this.sprite.setVelocityX(HAT_VELOCITY)
-      .enableBody(true, pos.x + 200, pos.y + this.sprite.height - 150, true, true)
+      // .enableBody(true, pos.x + 200, pos.y + this.sprite.height - 150, true, true)
       .anims.play(HAT_KEY, true);
   }
 };

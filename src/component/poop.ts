@@ -6,7 +6,7 @@ type Sprite = Phaser.Physics.Arcade.Sprite;
 const SCALE_X = 0.25;
 const SCALE_Y = 0.25;
 const SPRITE_KEY = 'poop';
-const VELOCITY_X = 400;
+const VELOCITY_X = 400 * -1;
 
 interface Pos {
   x: number;
@@ -17,9 +17,13 @@ export default class Poop {
   sprite: Sprite;
   scene: GameScene;
   sprites: Phaser.Physics.Arcade.Group;
+  lastCollision: number;
+  fresh: boolean;
 
   constructor(scene: GameScene) {
     this.scene = scene;
+    this.lastCollision = Date.now();
+    this.fresh = true;
   }
 
   public create(): void {
@@ -29,15 +33,20 @@ export default class Poop {
   }
 
   public update(): void {
-    if (this.sprite) {
-      this.sprite.setVelocityX(VELOCITY_X * -1);
+    if (this.sprite.active) {
+      this.sprite.setVelocityX(VELOCITY_X);
     }
   }
 
   public replaceSprite(): void {
     this.playAnimation();
     let pos = this.getStartingPosition();
-    this.sprite.enableBody(true, pos.x, pos.y, true, true).setActive(true);
+    this.sprite.enableBody(true, pos.x, pos.y, true, true);
+    this.fresh = true;
+  }
+
+  public handleCollision(): void {
+    this.sprite.disableBody(true, true);
   }
 
   private getStartingPosition(): Pos {
@@ -53,12 +62,7 @@ export default class Poop {
     let pos = this.getStartingPosition();
     this.sprite = this.scene.physics.add.sprite(pos.x, pos.y, SPRITE_KEY)
       .setScale(SCALE_X, SCALE_Y)
-      .setCollideWorldBounds(true)
-      .setVelocityX(VELOCITY_X * -1);
-    this.sprite.on('animationcomplete-splat', () => {
-      this.sprite.disableBody(true, true);
-      this.scene.physics.resume();
-    });
+      .setCollideWorldBounds(true);
 
     // adjust physics body for collisions
     this.sprite.body.setSize(this.sprite.width/2, this.sprite.height/2)

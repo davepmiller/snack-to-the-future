@@ -14,9 +14,6 @@ type Sprite = Phaser.Physics.Arcade.Sprite;
 type Ground = Phaser.Physics.Arcade.StaticGroup;
 type GameObject = Phaser.GameObjects.GameObject;
 
-const MARTY_HEALTH = 3;
-const TRUMP_HEALTH = 5;
-
 export class GameScene extends Phaser.Scene {
   audio: Audio;
   cursors: CursorKeys;
@@ -43,16 +40,14 @@ export class GameScene extends Phaser.Scene {
     this.marty = new Marty(this);
     this.trump = new Trump(this);
     this.poop = new Poop(this);
-    // this.hat = new Hat(this);
+    this.hat = new Hat(this);
   }
   
   create(): void {
-    this.registry.set('health', {trump: TRUMP_HEALTH, marty: MARTY_HEALTH});
     this.createBackground();
     this.createGameObjects();
     this.createColliders();
-    this.audio.create(this.sound);
-    this.audio.playTheme();
+    this.createAudio();
   }
 
   update(): void {
@@ -61,33 +56,34 @@ export class GameScene extends Phaser.Scene {
     this.marty.update();
     this.poop.update();
     this.trump.update();
-    // this.hat.update();
+    this.hat.update();
     if (!this.poop.sprite.active) {
       this.poop.replaceSprite();
     }
 
-    let health = this.registry.get('health');
-    if (health.marty <= 0) {
+    if (this.healthStatus.martyDead()) {
       this.audio.stopTheme();
       this.scene.start('GameOverScene');
-    } else if (health.trump <= 0) {
+    } else if (this.healthStatus.trumpDead()) {
       this.audio.stopTheme();
       this.scene.start('GameOverScene');
     }
   }
 
-  poopCollision(char: Sprite, poop: Sprite): void {
-    let health = this.registry.get('health');
-    if (char.name === Trump.getSpriteName()) {
-      health.trump--;
-      this.events.emit('TRUMP_HIT');
-    } else if (char.name === Marty.getSpriteName()) {
-      health.marty--;
-      this.events.emit('MARTY_HIT');
+  poopCollision(char: Sprite, poop: Sprite): boolean {
+    if (this.poop.fresh) {
+      this.poop.fresh = false;
+      if (char.name === 'trump') {
+        this.healthStatus.trumpHit();
+      } else if (char.name === 'marty') {
+        this.healthStatus.martyHit();
+      }
     }
-    this.registry.set('health', health);
-    this.physics.pause();
-    poop.anims.play('splat');
+
+    poop.anims.play('splat', true)
+      .on('animationcomplete-splat', () => this.poop.handleCollision());
+
+    return false;
   }
 
   hatCollision(char: Sprite, hat: Sprite): void {
@@ -110,7 +106,6 @@ export class GameScene extends Phaser.Scene {
     this.healthStatus = new HealthStatus(this);
     this.skyline = new Skyline(this);
     this.midground = new Midground(this);
-    
   }
 
   private createGameObjects(): void {
@@ -122,16 +117,21 @@ export class GameScene extends Phaser.Scene {
     this.marty.create();
     this.trump.create();
     this.poop.create();
-    // this.hat.create();
+    this.hat.create();
   }
 
   private createColliders(): void {
     this.physics.add.collider(this.marty.sprite, this.ground, this.groundCollision);
     this.physics.add.collider(this.trump.sprite, this.ground, this.groundCollision);
     this.physics.add.collider(this.poop.sprite, this.ground, this.groundCollision);
-    this.physics.add.overlap(this.marty.sprite, this.poop.sprite, this.poopCollision, null, this);
-    this.physics.add.overlap(this.trump.sprite, this.poop.sprite, this.poopCollision, null, this);
+    this.physics.add.overlap(this.marty.sprite, this.poop.sprite, null, this.poopCollision, this);
+    this.physics.add.overlap(this.trump.sprite, this.poop.sprite, null, this.poopCollision, this);
     // this.physics.add.overlap(this.trump.sprite, this.hat.sprite, this.hatCollision, null, this);
     this.physics.add.overlap(this.marty.sprite, this.trump.hat, this.hatCollision, null, this);
+  }
+
+  private createAudio(): void {
+    this.audio.create(this.sound);
+    this.audio.playTheme();
   }
 }
