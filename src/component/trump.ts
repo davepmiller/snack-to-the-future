@@ -7,15 +7,10 @@ const SCALE_X = 0.25;
 const SCALE_Y = 0.25;
 const SPRITE_KEY = 'trump';
 const FRAME_RATE = 15;
-const HAT_KEY = 'hat';
-const HAT_VELOCITY = 500;
 const CRUISE_KEY = 'trumpCruise';
 const THROW_KEY = 'trumpThrow';
-const SPLAT_KEY = 'splat';
 const ANIMATION_COMPLETE = 'animationcomplete-';
 const THROW_COMPLETE = ANIMATION_COMPLETE + THROW_KEY;
-const CRUISE_COMPLETE = ANIMATION_COMPLETE + CRUISE_KEY;
-const SPLAT_COMPLETE = ANIMATION_COMPLETE + SPLAT_KEY;
 const GROUND_KEY = 'ground';
 
 export default class Trump {
@@ -25,10 +20,11 @@ export default class Trump {
   offsetJumpY: number;
   offsetX: number;
   offsetY: number;
-  doLaunch: boolean;
+  doThrow: boolean;
 
   constructor(gameScene: GameScene) {
     this.scene = gameScene;
+    this.doThrow = false;
   }
 
   static getSpriteName(): String {
@@ -37,17 +33,16 @@ export default class Trump {
 
   create(): void {
     this.createSprite();
-    // this.createHat();
     this.createAnimations();
-    this.createAnimationHandlers();
     this.cruise();
   }
 
   update(): void {
-    this.cruise();
-    // if (this.doLaunch) {
-    //   this.launchHat();
-    // }
+    if (this.doThrow) {
+      this.throw();
+    } else {
+      this.cruise();
+    }
   }
 
   private cruise(): void {
@@ -55,18 +50,12 @@ export default class Trump {
   }
 
   private throw(): void {
-    this.sprite.anims.play(THROW_KEY, true);
+    this.sprite.anims.play(THROW_KEY, true)
+      .on(THROW_COMPLETE, () => {
+        this.doThrow = false;
+        this.scene.hat.doThrow = true;
+      });
   }
-
-  // private launchHat(): void {
-  //   this.doLaunch = false;
-  //   let pos = this.sprite.getRightCenter();
-  //   this.hat.enableBody(true, pos.x, pos.y + this.hat.height, true, true);
-  //   this.hat.setVelocityX(HAT_VELOCITY)
-  //     .enableBody(true, pos.x, pos.y + this.hat.height, true, true)
-  //     .anims.play(HAT_KEY, true);
-  //   // this.hat.anims.play(HAT_KEY, true);
-  // }
 
   private createSprite(): void {
     let groundY = this.scene.textures.get(GROUND_KEY).getSourceImage().height;
@@ -82,35 +71,13 @@ export default class Trump {
     this.sprite.body.setOffset(this.offsetX, this.offsetY);
   }
 
-  // private createHat(): void {
-  //   let pos = this.sprite.getRightCenter();
-  //   this.hat = this.scene.physics.add.sprite(pos.x, pos.y, HAT_KEY)
-  //     .setScale(SCALE_X, SCALE_Y)
-  //     .disableBody(true, true)
-  //     .disableInteractive()
-  //     .setName(HAT_KEY);
-  // }
-
-  private createAnimationHandlers(): void {
-    // this.sprite.on(SPLAT_COMPLETE, () => {
-      // this.throw();
-    // })
-    this.sprite.on(CRUISE_COMPLETE, () => {
-      this.throw();
-    });
-    this.sprite.on(THROW_COMPLETE, () => {
-      // this.doLaunch = true;
-      this.cruise();
-    });
-  }
-
   private createAnimations() {
     let anims = this.scene.anims;
     anims.create({
       key: CRUISE_KEY,
       frames: this.cruiseFrames(),
       frameRate: FRAME_RATE,
-      repeat: 2
+      repeat: -1
     });
 
     anims.create({
@@ -119,14 +86,6 @@ export default class Trump {
       frameRate: FRAME_RATE,
       repeat: 0
     });
-
-    // anims.create({
-    //   key: HAT_KEY,
-    //   frames: this.scene.anims.generateFrameNumbers(
-    //     HAT_KEY, {start: 0, end: 7}),
-    //   frameRate: FRAME_RATE,
-    //   repeat: -1,
-    // });
   }
 
   private cruiseFrames(): AnimationFrame[] {

@@ -11,21 +11,30 @@ const FRAME_RATE = 15;
 export default class Hat {
   scene: GameScene;
   sprite: Sprite;
+  doThrow: boolean;
 
   constructor(gameScene: GameScene) {
     this.scene = gameScene;
+    this.doThrow = false;
   }
 
   create(): void {
     this.createSprite();
     this.createAnimation();
-    this.launchHat();
+    this.launchHat(false);
   }
 
   update(): void {
     if (this.sprite.x >= this.scene.physics.world.bounds.right) {
+      this.sprite.visible = false;
+      this.sprite.setVelocityX(0);
       this.sprite.x = this.scene.trump.sprite.getRightCenter().x;
+    } else if (this.doThrow) {
+      this.launchHat();
+      this.doThrow = false;
     }
+
+    this.sprite.anims.play(HAT_KEY, true);
   }
 
   private createAnimation(): void {
@@ -40,16 +49,13 @@ export default class Hat {
 
   private createSprite(): void {
     let pos = this.scene.trump.sprite.getRightCenter();
-    this.sprite = this.scene.physics.add.sprite(pos.x, 300, HAT_KEY)
+    this.sprite = this.scene.physics.add.sprite(pos.x, pos.y - 50, HAT_KEY)
       .setScale(SCALE_X, SCALE_Y)
-      // .disableBody(true, true)
-      .setName(HAT_KEY);
+      .setName(HAT_KEY)
+      .setVisible(false);
   }
 
-  private launchHat(): void {
-    let pos = this.scene.trump.sprite.getRightCenter();
-    this.sprite.setVelocityX(HAT_VELOCITY)
-      // .enableBody(true, pos.x + 200, pos.y + this.sprite.height - 150, true, true)
-      .anims.play(HAT_KEY, true);
+  private launchHat(visible: boolean = true): void {
+    this.sprite.setVisible(visible).setVelocityX(HAT_VELOCITY);
   }
 };

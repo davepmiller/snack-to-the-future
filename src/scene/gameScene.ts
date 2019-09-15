@@ -75,6 +75,7 @@ export class GameScene extends Phaser.Scene {
       this.poop.fresh = false;
       if (char.name === 'trump') {
         this.healthStatus.trumpHit();
+        this.trump.doThrow = true;
       } else if (char.name === 'marty') {
         this.healthStatus.martyHit();
       }
@@ -86,10 +87,8 @@ export class GameScene extends Phaser.Scene {
     return false;
   }
 
-  hatCollision(char: Sprite, hat: Sprite): void {
-    // hat.disableBody();
-    console.log('HAT COLLISION');
-    this.physics.pause();
+  hatCollision(char: Sprite, hat: Sprite): boolean {
+    return false;
   }
 
   groundCollision(char: GameObject, ground: GameObject): void {
@@ -126,7 +125,8 @@ export class GameScene extends Phaser.Scene {
     this.physics.add.collider(this.poop.sprite, this.ground, this.groundCollision);
     this.physics.add.overlap(this.marty.sprite, this.poop.sprite, null, this.poopCollision, this);
     this.physics.add.overlap(this.trump.sprite, this.poop.sprite, null, this.poopCollision, this);
-    // this.physics.add.overlap(this.trump.sprite, this.hat.sprite, this.hatCollision, null, this);
+    this.physics.add.overlap(this.trump.sprite, this.hat.sprite, null, this.hatCollision, this);
+    this.physics.add.overlap(this.marty.sprite, this.hat.sprite, null, this.hatCollision, this)
     this.physics.add.overlap(this.marty.sprite, this.trump.hat, this.hatCollision, null, this);
   }
 
