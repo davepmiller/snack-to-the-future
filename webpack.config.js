@@ -33,7 +33,8 @@ module.exports = {
 
   devServer: {
     contentBase: path.resolve(__dirname, 'dist'),
-    https: true
+    https: false,
+    compress: true
   },
 
   plugins: [
