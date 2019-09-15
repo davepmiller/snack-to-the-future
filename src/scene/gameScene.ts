@@ -1,8 +1,9 @@
 import * as Phaser from 'phaser';
-import {Marty} from '../component/marty';
-import {Trump} from '../component/trump';
-import {Poop} from '../component/poop';
-import {Audio} from '../audio';
+import Marty from '../component/marty';
+import Trump from '../component/trump';
+import Poop from '../component/poop';
+import Audio from '../audio';
+import Hat from '../component/hat';
 import Midground from '../component/midground';
 import Background from '../component/background';
 import Skyline from '../component/skyline';
@@ -22,6 +23,7 @@ export class GameScene extends Phaser.Scene {
   marty: Marty;
   trump: Trump;
   poop: Poop;
+  hat: Hat;
   ground: Ground;
   background: Background;
   skyline: Skyline;
@@ -41,6 +43,7 @@ export class GameScene extends Phaser.Scene {
     this.marty = new Marty(this);
     this.trump = new Trump(this);
     this.poop = new Poop(this);
+    // this.hat = new Hat(this);
   }
   
   create(): void {
@@ -49,7 +52,7 @@ export class GameScene extends Phaser.Scene {
     this.createGameObjects();
     this.createColliders();
     this.audio.create(this.sound);
-    this.audio.play();
+    this.audio.playTheme();
   }
 
   update(): void {
@@ -58,16 +61,17 @@ export class GameScene extends Phaser.Scene {
     this.marty.update();
     this.poop.update();
     this.trump.update();
+    // this.hat.update();
     if (!this.poop.sprite.active) {
       this.poop.replaceSprite();
     }
 
     let health = this.registry.get('health');
     if (health.marty <= 0) {
-      this.audio.stop();
+      this.audio.stopTheme();
       this.scene.start('GameOverScene');
     } else if (health.trump <= 0) {
-      this.audio.stop();
+      this.audio.stopTheme();
       this.scene.start('GameOverScene');
     }
   }
@@ -87,7 +91,9 @@ export class GameScene extends Phaser.Scene {
   }
 
   hatCollision(char: Sprite, hat: Sprite): void {
-
+    // hat.disableBody();
+    console.log('HAT COLLISION');
+    this.physics.pause();
   }
 
   groundCollision(char: GameObject, ground: GameObject): void {
@@ -116,6 +122,7 @@ export class GameScene extends Phaser.Scene {
     this.marty.create();
     this.trump.create();
     this.poop.create();
+    // this.hat.create();
   }
 
   private createColliders(): void {
@@ -124,7 +131,7 @@ export class GameScene extends Phaser.Scene {
     this.physics.add.collider(this.poop.sprite, this.ground, this.groundCollision);
     this.physics.add.overlap(this.marty.sprite, this.poop.sprite, this.poopCollision, null, this);
     this.physics.add.overlap(this.trump.sprite, this.poop.sprite, this.poopCollision, null, this);
-    this.physics.add.overlap(this.trump.sprite, this.trump.hat);//,  this.hatCollision, null, this);
+    // this.physics.add.overlap(this.trump.sprite, this.hat.sprite, this.hatCollision, null, this);
     this.physics.add.overlap(this.marty.sprite, this.trump.hat, this.hatCollision, null, this);
   }
 }

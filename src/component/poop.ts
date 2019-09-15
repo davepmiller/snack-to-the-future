@@ -13,7 +13,7 @@ interface Pos {
   y: number;
 }
 
-export class Poop {
+export default class Poop {
   sprite: Sprite;
   scene: GameScene;
   sprites: Phaser.Physics.Arcade.Group;
@@ -35,11 +35,9 @@ export class Poop {
   }
 
   public replaceSprite(): void {
-    let pos = this.getStartingPosition();
-    // this.sprite.setPosition(pos.x, pos.y);
     this.playAnimation();
-    this.sprite.enableBody(true, pos.x, pos.y, true, true);
-    this.sprite.setActive(true);
+    let pos = this.getStartingPosition();
+    this.sprite.enableBody(true, pos.x, pos.y, true, true).setActive(true);
   }
 
   private getStartingPosition(): Pos {
@@ -53,18 +51,18 @@ export class Poop {
  
   private createSprite(): void {
     let pos = this.getStartingPosition();
-    this.sprite = this.scene.physics.add.sprite(pos.x, pos.y, SPRITE_KEY);
-    this.sprite.setScale(SCALE_X, SCALE_Y);
-    this.sprite.setCollideWorldBounds(true);
+    this.sprite = this.scene.physics.add.sprite(pos.x, pos.y, SPRITE_KEY)
+      .setScale(SCALE_X, SCALE_Y)
+      .setCollideWorldBounds(true)
+      .setVelocityX(VELOCITY_X * -1);
     this.sprite.on('animationcomplete-splat', () => {
       this.sprite.disableBody(true, true);
       this.scene.physics.resume();
     });
 
     // adjust physics body for collisions
-    this.sprite.body.setSize(this.sprite.width/2, this.sprite.height/2);
-    this.sprite.body.setOffset(this.sprite.width/2, this.sprite.height/2);
-    this.sprite.setVelocityX(VELOCITY_X * -1);
+    this.sprite.body.setSize(this.sprite.width/2, this.sprite.height/2)
+      .setOffset(this.sprite.width/2, this.sprite.height/2);
   }
 
   private createAnimations(): void {

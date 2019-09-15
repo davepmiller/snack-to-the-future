@@ -10,7 +10,7 @@ const SCALE_Y = 0.25;
 const SPRITE_KEY = 'marty';
 const FRAME_RATE = 15;
 
-export class Marty {
+export default class Marty {
   sprite: Sprite;
   scene: GameScene;
   offsetJumpY: number;
@@ -76,16 +76,16 @@ export class Marty {
   private createSprite(): void {
     let groundY = this.scene.textures.get('ground').getSourceImage().height;
     let pos = {x: window.innerWidth / 2.5, y: window.innerHeight - groundY};
-    this.sprite = this.scene.physics.add.sprite(pos.x, pos.y, SPRITE_KEY);
-    this.sprite.setName(SPRITE_KEY);
-    this.sprite.body.customSeparateY = true;
-    this.sprite.setScale(SCALE_X, SCALE_Y);
-    this.sprite.setCollideWorldBounds(true);
+    this.sprite = this.scene.physics.add.sprite(pos.x, pos.y, SPRITE_KEY)
+      .setName(SPRITE_KEY)
+      .setScale(SCALE_X, SCALE_Y)
+      .setCollideWorldBounds(true);
     this.offsetJumpY = -this.sprite.height*2;
     this.offsetY = this.sprite.height/2;
     this.offsetX = this.sprite.width/10;
-    this.sprite.body.setSize(this.sprite.width/2, this.offsetY);
-    this.sprite.body.setOffset(this.offsetX, this.offsetY);
+    this.sprite.body.setSize(this.sprite.width/2, this.offsetY)
+      .setOffset(this.offsetX, this.offsetY)
+      .customSeparateY = true;
   }
 
   private createAnimations(): void {

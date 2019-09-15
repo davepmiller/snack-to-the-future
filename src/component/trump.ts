@@ -14,11 +14,11 @@ const THROW_KEY = 'trumpThrow';
 const SPLAT_KEY = 'splat';
 const ANIMATION_COMPLETE = 'animationcomplete-';
 const THROW_COMPLETE = ANIMATION_COMPLETE + THROW_KEY;
-// const CRUISE_COMPLETE = ANIMATION_COMPLETE + CRUISE_KEY;
+const CRUISE_COMPLETE = ANIMATION_COMPLETE + CRUISE_KEY;
 const SPLAT_COMPLETE = ANIMATION_COMPLETE + SPLAT_KEY;
 const GROUND_KEY = 'ground';
 
-export class Trump {
+export default class Trump {
   scene: GameScene;
   sprite: Sprite;
   hat: Sprite;
@@ -37,7 +37,7 @@ export class Trump {
 
   create(): void {
     this.createSprite();
-    this.createHat();
+    // this.createHat();
     this.createAnimations();
     this.createAnimationHandlers();
     this.cruise();
@@ -48,6 +48,60 @@ export class Trump {
     // if (this.doLaunch) {
     //   this.launchHat();
     // }
+  }
+
+  private cruise(): void {
+    this.sprite.anims.play(CRUISE_KEY, true);
+  }
+
+  private throw(): void {
+    this.sprite.anims.play(THROW_KEY, true);
+  }
+
+  // private launchHat(): void {
+  //   this.doLaunch = false;
+  //   let pos = this.sprite.getRightCenter();
+  //   this.hat.enableBody(true, pos.x, pos.y + this.hat.height, true, true);
+  //   this.hat.setVelocityX(HAT_VELOCITY)
+  //     .enableBody(true, pos.x, pos.y + this.hat.height, true, true)
+  //     .anims.play(HAT_KEY, true);
+  //   // this.hat.anims.play(HAT_KEY, true);
+  // }
+
+  private createSprite(): void {
+    let groundY = this.scene.textures.get(GROUND_KEY).getSourceImage().height;
+    let pos = {x: window.innerWidth / 10, y: window.innerHeight - groundY};
+    this.sprite = this.scene.physics.add.sprite(pos.x, pos.y, SPRITE_KEY)
+      .setName(SPRITE_KEY)
+      .setScale(SCALE_X, SCALE_Y)
+      .setCollideWorldBounds(true);
+    this.offsetJumpY = -this.sprite.height*2;
+    this.offsetY = this.sprite.height/2;
+    this.offsetX = this.sprite.width/10;
+    this.sprite.body.setSize(this.sprite.width/2, this.offsetY);
+    this.sprite.body.setOffset(this.offsetX, this.offsetY);
+  }
+
+  // private createHat(): void {
+  //   let pos = this.sprite.getRightCenter();
+  //   this.hat = this.scene.physics.add.sprite(pos.x, pos.y, HAT_KEY)
+  //     .setScale(SCALE_X, SCALE_Y)
+  //     .disableBody(true, true)
+  //     .disableInteractive()
+  //     .setName(HAT_KEY);
+  // }
+
+  private createAnimationHandlers(): void {
+    // this.sprite.on(SPLAT_COMPLETE, () => {
+      // this.throw();
+    // })
+    this.sprite.on(CRUISE_COMPLETE, () => {
+      this.throw();
+    });
+    this.sprite.on(THROW_COMPLETE, () => {
+      // this.doLaunch = true;
+      this.cruise();
+    });
   }
 
   private createAnimations() {
@@ -66,64 +120,13 @@ export class Trump {
       repeat: 0
     });
 
-    anims.create({
-      key: HAT_KEY,
-      frames: this.scene.anims.generateFrameNumbers(
-        HAT_KEY, {start: 0, end: 7}),
-      frameRate: FRAME_RATE,
-      repeat: -1,
-    })
-  }
-
-  private cruise(): void {
-    this.sprite.anims.play(CRUISE_KEY, true);
-  }
-
-  private throw(): void {
-    this.sprite.anims.play(THROW_KEY, true);
-  }
-
-  private launchHat(): void {
-    this.doLaunch = false;
-    let pos = this.sprite.getRightCenter();
-    this.hat.enableBody(true, pos.x, pos.y + this.hat.height, true, true);
-    this.hat.setVelocityX(HAT_VELOCITY);
-    this.hat.anims.play(HAT_KEY, true);
-  }
-
-  private createSprite(): void {
-    let groundY = this.scene.textures.get(GROUND_KEY).getSourceImage().height;
-    let pos = {x: window.innerWidth / 10, y: window.innerHeight - groundY};
-    this.sprite = this.scene.physics.add.sprite(pos.x, pos.y, SPRITE_KEY);
-    this.sprite.setName(SPRITE_KEY); 
-    this.sprite.setScale(SCALE_X, SCALE_Y);
-    this.sprite.setCollideWorldBounds(true);
-    this.offsetJumpY = -this.sprite.height*2;
-    this.offsetY = this.sprite.height/2;
-    this.offsetX = this.sprite.width/10;
-    this.sprite.body.setSize(this.sprite.width/2, this.offsetY);
-    this.sprite.body.setOffset(this.offsetX, this.offsetY);
-  }
-
-  private createHat(): void {
-    let pos = this.sprite.getRightCenter();
-    this.hat = this.scene.physics.add.sprite(pos.x, pos.y, HAT_KEY);
-    this.hat.setScale(SCALE_X, SCALE_Y);
-    this.hat.disableBody(true, true);
-    this.hat.setName(HAT_KEY);
-  }
-
-  private createAnimationHandlers(): void {
-    this.sprite.on(SPLAT_COMPLETE, () => {
-      this.throw();
-    })
-    // this.sprite.on(CRUISE_COMPLETE, () => {
-      // this.throw();
+    // anims.create({
+    //   key: HAT_KEY,
+    //   frames: this.scene.anims.generateFrameNumbers(
+    //     HAT_KEY, {start: 0, end: 7}),
+    //   frameRate: FRAME_RATE,
+    //   repeat: -1,
     // });
-    this.sprite.on(THROW_COMPLETE, () => {
-      this.doLaunch = true;
-      this.cruise();
-    });
   }
 
   private cruiseFrames(): AnimationFrame[] {

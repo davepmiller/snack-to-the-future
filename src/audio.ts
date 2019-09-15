@@ -3,8 +3,8 @@ import {GameScene} from './scene/gameScene';
 
 type BaseSoundManager = Phaser.Sound.BaseSoundManager;
 
-export class Audio {
-  music: Phaser.Sound.BaseSound;
+export default class Audio {
+  theme: Phaser.Sound.BaseSound;
   
   constructor (scene: GameScene) {
     scene.load.audio(
@@ -16,14 +16,14 @@ export class Audio {
   }
 
   public create(soundManager: BaseSoundManager): void {
-    this.music = soundManager.add('power_of_love', {loop: true});
+    this.theme = soundManager.add('power_of_love', {loop: true});
   }
 
-  public play(): void {
-    this.music.play();
+  public playTheme(): void {
+    this.theme.play();
   }
 
-  public stop(): void {
-    this.music.stop();
+  public stopTheme(): void {
+    this.theme.stop();
   }
 }
