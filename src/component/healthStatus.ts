@@ -26,7 +26,9 @@ export default class HealthStatus {
 
   public martyHit(): void {
     this.martyHitPoints--;
-    this.martyHealthBar[this.martyHitPoints].setTint(EMPTY);
+    if (this.martyHitPoints >= 0) {
+      this.martyHealthBar[this.martyHitPoints].setTint(EMPTY);
+    }
   }
 
   public martyDead(): boolean {
@@ -35,7 +37,9 @@ export default class HealthStatus {
 
   public trumpHit(): void {
     this.trumpHitPoints--;
-    this.trumpHealthBar[this.trumpHitPoints].setTint(EMPTY);
+    if (this.trumpHitPoints >= 0) {
+      this.trumpHealthBar[this.trumpHitPoints].setTint(EMPTY);
+    }
   }
 
   public trumpDead(): boolean {

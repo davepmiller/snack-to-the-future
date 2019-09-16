@@ -12,7 +12,6 @@ import HealthStatus from '../component/healthStatus';
 type CursorKeys = Phaser.Types.Input.Keyboard.CursorKeys;
 type Sprite = Phaser.Physics.Arcade.Sprite;
 type Ground = Phaser.Physics.Arcade.StaticGroup;
-type GameObject = Phaser.GameObjects.GameObject;
 
 export class GameScene extends Phaser.Scene {
   audio: Audio;
@@ -50,8 +49,10 @@ export class GameScene extends Phaser.Scene {
     this.poop = new Poop(this);
     this.createColliders();
   }
-  
+
   create(): void {
+    this.registry.set('hatDoThrow', false);
+    this.registry.set('trumpDoThrow', false);
     this.createAudio();
   }
 
@@ -79,7 +80,8 @@ export class GameScene extends Phaser.Scene {
       this.poop.fresh = false;
       if (char.name === 'trump') {
         this.healthStatus.trumpHit();
-        this.trump.doThrow = true;
+        // this.trump.doThrow = true;
+        this.registry.set('trumpDoThrow', true);
       } else if (char.name === 'marty') {
         this.healthStatus.martyHit();
       }
@@ -108,9 +110,9 @@ export class GameScene extends Phaser.Scene {
   private createBackground(): void {
     this.cameras.main.roundPixels = true;
     this.background = new Background(this);
-    this.healthStatus = new HealthStatus(this);
     this.skyline = new Skyline(this);
     this.midground = new Midground(this);
+    this.healthStatus = new HealthStatus(this);
   }
 
   private createColliders(): void {

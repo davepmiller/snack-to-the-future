@@ -7,6 +7,9 @@ type AnimationFrame = Phaser.Types.Animations.AnimationFrame;
 const SCALE_X = 0.25;
 const SCALE_Y = 0.25;
 const SPRITE_KEY = 'marty';
+const CRUISE_KEY = 'cruise';
+const OLLIE_KEY = 'ollie';
+const THREAD_KEY = 'thread';
 const FRAME_RATE = 15;
 
 export default class Marty extends Phaser.Physics.Arcade.Sprite {
@@ -33,21 +36,24 @@ export default class Marty extends Phaser.Physics.Arcade.Sprite {
     this.gameScene.add.existing(this);
     this.setCollideWorldBounds(true);
     this.createAnimations();
+    this.anims.load(CRUISE_KEY);
+    this.anims.load(OLLIE_KEY);
+    this.anims.load(THREAD_KEY);
     this.createAnimationCallbacks();
     this.createInputHandling();
     this.cruise();
   }
 
   private cruise(): void {
-    this.anims.play('cruise', true);
+    this.anims.play(CRUISE_KEY, true);
   }
 
   private ollie(): void {
-    this.anims.play('ollie', true);
+    this.anims.play(OLLIE_KEY, true);
   }
 
   private thread(): void {
-    this.anims.play('thread', true);
+    this.anims.play(THREAD_KEY, true);
   }
 
   private createInputHandling(): void {
@@ -73,20 +79,20 @@ export default class Marty extends Phaser.Physics.Arcade.Sprite {
 
   private createAnimations(): void {
     this.gameScene.anims.create({
-      key: 'cruise',
+      key: CRUISE_KEY,
       frames: this.cruiseFrames(),
       frameRate: FRAME_RATE,
       repeat: -1,
     });
 
     this.gameScene.anims.create({
-      key: 'ollie',
+      key: OLLIE_KEY,
       frames: this.ollieFrames(),
       frameRate: FRAME_RATE,
     });
 
     this.gameScene.anims.create({
-      key: 'thread',
+      key: THREAD_KEY,
       frames: this.threadFrames(),
       frameRate: FRAME_RATE,
     });
