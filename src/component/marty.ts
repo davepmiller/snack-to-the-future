@@ -1,8 +1,6 @@
 import * as Phaser from 'phaser';
 import {GameScene} from '../scene/gameScene';
-import { SSL_OP_ALLOW_UNSAFE_LEGACY_RENEGOTIATION } from 'constants';
 
-type Sprite = Phaser.Physics.Arcade.Sprite;
 type Gamepad = Phaser.Input.Gamepad.Gamepad;
 type AnimationFrame = Phaser.Types.Animations.AnimationFrame;
 

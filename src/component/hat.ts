@@ -1,7 +1,5 @@
 import {GameScene} from '../scene/gameScene';
 
-type Sprite = Phaser.Physics.Arcade.Sprite;
-
 const SCALE_X = 0.25;
 const SCALE_Y = 0.25;
 const HAT_KEY = 'hat';
