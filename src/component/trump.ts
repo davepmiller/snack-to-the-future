@@ -15,7 +15,6 @@ const GROUND_KEY = 'ground';
 
 export default class Trump extends Phaser.Physics.Arcade.Sprite {
   gameScene: GameScene;
-  offsetJumpY: number;
   offsetX: number;
   offsetY: number;
   doThrow: boolean;
@@ -29,7 +28,6 @@ export default class Trump extends Phaser.Physics.Arcade.Sprite {
     this.name = SPRITE_KEY;
     this.scaleX = SCALE_X;
     this.scaleY = SCALE_Y;
-    this.offsetJumpY = -this.height*2;
     this.offsetY = this.height/2;
     this.offsetX = this.width/10;
     this.gameScene.add.existing(this);
@@ -39,10 +37,6 @@ export default class Trump extends Phaser.Physics.Arcade.Sprite {
     this.setCollideWorldBounds(true);
     this.createAnimations();
     this.cruise();
-  }
-
-  static getSpriteName(): String {
-    return SPRITE_KEY;
   }
 
   update(): void {
@@ -58,11 +52,12 @@ export default class Trump extends Phaser.Physics.Arcade.Sprite {
   }
 
   private throw(): void {
-    this.anims.play(THROW_KEY, true)
-      .on(THROW_COMPLETE, () => {
-        this.doThrow = false;
-        this.gameScene.hat.doThrow = true;
-      });
+    this.anims.play(THROW_KEY, true);//.on(THROW_COMPLETE, this.throwComplete);
+  }
+
+  private throwComplete(): void {
+    this.doThrow = false;
+    this.gameScene.hat.doThrow = true;
   }
 
   private createAnimations() {
@@ -80,6 +75,8 @@ export default class Trump extends Phaser.Physics.Arcade.Sprite {
       frameRate: FRAME_RATE,
       repeat: 0
     });
+
+    this.on(THROW_COMPLETE, this.throwComplete);
   }
 
   private cruiseFrames(): AnimationFrame[] {

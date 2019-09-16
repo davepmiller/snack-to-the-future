@@ -65,7 +65,7 @@ export class GameScene extends Phaser.Scene {
       this.poop.replaceSprite();
     }
 
-    if (this.healthStatus.martyDead() || this.healthStatus.trumpDead()) {
+    if (this.healthStatus.martyDead()) {
       this.audio.stopTheme();
       this.scene.stop('GameScene');
       this.scene.start('GameOverScene');
@@ -94,11 +94,11 @@ export class GameScene extends Phaser.Scene {
   hatCollision(char: Sprite, hat: Sprite): boolean {
     if (this.hat.hasHit === false) {
       if (char.name === 'marty') {
-        console.log(char.name);
-        console.log("HAT HIT MARTY");
-        this.hat.reset();
-        this.hat.hasHit = true;
-        this.healthStatus.martyHit();
+        if (hat.x >= char.x) {
+          this.hat.reset();
+          this.hat.hasHit = true;
+          this.healthStatus.martyHit();
+        }
       }
     }
 

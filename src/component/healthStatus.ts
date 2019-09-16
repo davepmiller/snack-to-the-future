@@ -26,7 +26,6 @@ export default class HealthStatus {
 
   public martyHit(): void {
     this.martyHitPoints--;
-    console.log('marty health: ' + this.martyHitPoints);
     this.martyHealthBar[this.martyHitPoints].setTint(EMPTY);
   }
 
@@ -36,7 +35,6 @@ export default class HealthStatus {
 
   public trumpHit(): void {
     this.trumpHitPoints--;
-    console.log('trump health: ' + this.trumpHitPoints);
     this.trumpHealthBar[this.trumpHitPoints].setTint(EMPTY);
   }
 

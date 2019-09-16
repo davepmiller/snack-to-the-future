@@ -38,10 +38,6 @@ export default class Marty extends Phaser.Physics.Arcade.Sprite {
     this.cruise();
   }
 
-  static getSpriteName(): String {
-    return SPRITE_KEY;
-  }
-
   private cruise(): void {
     this.anims.play('cruise', true);
   }
