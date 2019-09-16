@@ -37,17 +37,17 @@ export class GameScene extends Phaser.Scene {
   
   preload(): void {
     this.audio = new Audio(this);
-    this.poop = new Poop(this);
     this.createBackground();
     let groundHeight = this.textures.get('ground').getSourceImage().height/2;
     let y = window.innerHeight - groundHeight;
+    this.physics.world.setBounds(0,0,window.innerWidth,y,true,true,false,true);
     this.ground = this.physics.add.staticGroup();
     this.ground.create(window.innerWidth / 2, y, 'ground').refreshBody();
     this.cursors = this.input.keyboard.createCursorKeys();
     this.trump = new Trump(this);
     this.hat = new Hat(this);
     this.marty = new Marty(this);
-    this.poop.create();
+    this.poop = new Poop(this);
     this.createColliders();
   }
   
@@ -61,18 +61,16 @@ export class GameScene extends Phaser.Scene {
     this.poop.update();
     this.trump.update();
     this.hat.update();
-    if (!this.poop.sprite.active) {
+    if (!this.poop.active) {
       this.poop.replaceSprite();
     }
 
-    if (this.healthStatus.martyDead()) {
+    if (this.healthStatus.martyDead() || this.healthStatus.trumpDead()) {
       this.audio.stopTheme();
       this.scene.stop('GameScene');
       this.scene.start('GameOverScene');
     } else if (this.healthStatus.trumpDead()) {
-      this.audio.stopTheme();
-      this.scene.stop('GameScene');
-      this.scene.start('GameOverScene');
+      // end scene
     }
   }
 
@@ -94,15 +92,17 @@ export class GameScene extends Phaser.Scene {
   }
 
   hatCollision(char: Sprite, hat: Sprite): boolean {
-    return false;
-  }
-
-  groundCollision(char: GameObject, ground: GameObject): void {
-    let mBody = char.body as Phaser.Physics.Arcade.Body;
-    let gBody = ground.body as Phaser.Physics.Arcade.Body;
-    if (mBody.bottom > gBody.top) {
-      mBody.y -= (mBody.bottom - gBody.top);
+    if (this.hat.hasHit === false) {
+      if (char.name === 'marty') {
+        console.log(char.name);
+        console.log("HAT HIT MARTY");
+        this.hat.reset();
+        this.hat.hasHit = true;
+        this.healthStatus.martyHit();
+      }
     }
+
+    return false;
   }
 
   private createBackground(): void {
@@ -114,11 +114,8 @@ export class GameScene extends Phaser.Scene {
   }
 
   private createColliders(): void {
-    this.physics.add.collider(this.marty, this.ground, this.groundCollision);
-    this.physics.add.collider(this.trump, this.ground, this.groundCollision);
-    this.physics.add.collider(this.poop.sprite, this.ground, this.groundCollision);
-    this.physics.add.overlap(this.marty, this.poop.sprite, null, this.poopCollision, this);
-    this.physics.add.overlap(this.trump, this.poop.sprite, null, this.poopCollision, this);
+    this.physics.add.overlap(this.marty, this.poop, null, this.poopCollision, this);
+    this.physics.add.overlap(this.trump, this.poop, null, this.poopCollision, this);
     this.physics.add.overlap(this.trump, this.hat, null, this.hatCollision, this);
     this.physics.add.overlap(this.marty, this.hat, null, this.hatCollision, this)
     this.physics.add.overlap(this.marty, this.hat, null, this.hatCollision, this);

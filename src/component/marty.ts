@@ -10,7 +10,6 @@ const SPRITE_KEY = 'marty';
 const FRAME_RATE = 15;
 
 export default class Marty extends Phaser.Physics.Arcade.Sprite {
-  // sprite: Sprite;
   gameScene: GameScene;
   offsetJumpY: number;
   offsetX: number;
@@ -32,18 +31,12 @@ export default class Marty extends Phaser.Physics.Arcade.Sprite {
       .setOffset(this.offsetX, this.offsetY)
       .customSeparateY = true;
     this.gameScene.add.existing(this);
+    this.setCollideWorldBounds(true);
     this.createAnimations();
     this.createAnimationCallbacks();
     this.createInputHandling();
     this.cruise();
   }
-
-  // create(): void {
-  //   this.createAnimations();
-  //   this.createAnimationCallbacks();
-  //   this.createInputHandling();
-  //   this.cruise();
-  // }
 
   static getSpriteName(): String {
     return SPRITE_KEY;

@@ -36,6 +36,7 @@ export default class Trump extends Phaser.Physics.Arcade.Sprite {
     this.gameScene.physics.world.enable(this);
     this.body.setSize(this.width/2, this.offsetY)
       .setOffset(this.offsetX, this.offsetY);
+    this.setCollideWorldBounds(true);
     this.createAnimations();
     this.cruise();
   }
