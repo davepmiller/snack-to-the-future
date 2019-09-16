@@ -8,33 +8,36 @@ const HAT_KEY = 'hat';
 const HAT_VELOCITY = 500;
 const FRAME_RATE = 15;
 
-export default class Hat {
+export default class Hat extends Phaser.Physics.Arcade.Sprite {
   scene: GameScene;
-  sprite: Sprite;
   doThrow: boolean;
 
   constructor(gameScene: GameScene) {
+    let pos = gameScene.trump.sprite.getRightCenter();
+    super(gameScene, pos.x, pos.y - 50, HAT_KEY);
     this.scene = gameScene;
     this.doThrow = false;
-  }
-
-  create(): void {
-    this.createSprite();
+    this.scaleX = SCALE_X;
+    this.scaleY = SCALE_Y;
+    this.name = HAT_KEY;
+    this.visible = false;
+    this.scene.physics.world.enable(this);
+    this.scene.add.existing(this);
     this.createAnimation();
     this.launchHat(false);
   }
 
   update(): void {
-    if (this.sprite.x >= this.scene.physics.world.bounds.right) {
-      this.sprite.visible = false;
-      this.sprite.setVelocityX(0);
-      this.sprite.x = this.scene.trump.sprite.getRightCenter().x;
+    if (this.x >= this.scene.physics.world.bounds.right) {
+      this.visible = false;
+      this.setVelocityX(0);
+      this.x = this.scene.trump.sprite.getRightCenter().x;
     } else if (this.doThrow) {
       this.launchHat();
       this.doThrow = false;
     }
 
-    this.sprite.anims.play(HAT_KEY, true);
+    this.anims.play(HAT_KEY, true);
   }
 
   private createAnimation(): void {
@@ -47,15 +50,8 @@ export default class Hat {
     });
   }
 
-  private createSprite(): void {
-    let pos = this.scene.trump.sprite.getRightCenter();
-    this.sprite = this.scene.physics.add.sprite(pos.x, pos.y - 50, HAT_KEY)
-      .setScale(SCALE_X, SCALE_Y)
-      .setName(HAT_KEY)
-      .setVisible(false);
-  }
-
   private launchHat(visible: boolean = true): void {
-    this.sprite.setVisible(visible).setVelocityX(HAT_VELOCITY);
+    this.visible = visible;
+    this.setVelocityX(HAT_VELOCITY);
   }
 };

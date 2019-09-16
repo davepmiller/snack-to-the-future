@@ -49,7 +49,6 @@ export class GameScene extends Phaser.Scene {
     this.marty = new Marty(this);
     this.trump.create();
     this.poop.create();
-    this.hat.create();
     this.createColliders();
   }
   
@@ -121,8 +120,8 @@ export class GameScene extends Phaser.Scene {
     this.physics.add.collider(this.poop.sprite, this.ground, this.groundCollision);
     this.physics.add.overlap(this.marty, this.poop.sprite, null, this.poopCollision, this);
     this.physics.add.overlap(this.trump.sprite, this.poop.sprite, null, this.poopCollision, this);
-    this.physics.add.overlap(this.trump.sprite, this.hat.sprite, null, this.hatCollision, this);
-    this.physics.add.overlap(this.marty, this.hat.sprite, null, this.hatCollision, this)
+    this.physics.add.overlap(this.trump.sprite, this.hat, null, this.hatCollision, this);
+    this.physics.add.overlap(this.marty, this.hat, null, this.hatCollision, this)
     this.physics.add.overlap(this.marty, this.trump.hat, null, this.hatCollision, this);
   }
 
