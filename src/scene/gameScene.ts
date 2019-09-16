@@ -37,17 +37,16 @@ export class GameScene extends Phaser.Scene {
   
   preload(): void {
     this.audio = new Audio(this);
-    this.trump = new Trump(this);
     this.poop = new Poop(this);
-    this.hat = new Hat(this);
     this.createBackground();
     let groundHeight = this.textures.get('ground').getSourceImage().height/2;
     let y = window.innerHeight - groundHeight;
     this.ground = this.physics.add.staticGroup();
     this.ground.create(window.innerWidth / 2, y, 'ground').refreshBody();
     this.cursors = this.input.keyboard.createCursorKeys();
+    this.trump = new Trump(this);
+    this.hat = new Hat(this);
     this.marty = new Marty(this);
-    this.trump.create();
     this.poop.create();
     this.createColliders();
   }
@@ -116,13 +115,13 @@ export class GameScene extends Phaser.Scene {
 
   private createColliders(): void {
     this.physics.add.collider(this.marty, this.ground, this.groundCollision);
-    this.physics.add.collider(this.trump.sprite, this.ground, this.groundCollision);
+    this.physics.add.collider(this.trump, this.ground, this.groundCollision);
     this.physics.add.collider(this.poop.sprite, this.ground, this.groundCollision);
     this.physics.add.overlap(this.marty, this.poop.sprite, null, this.poopCollision, this);
-    this.physics.add.overlap(this.trump.sprite, this.poop.sprite, null, this.poopCollision, this);
-    this.physics.add.overlap(this.trump.sprite, this.hat, null, this.hatCollision, this);
+    this.physics.add.overlap(this.trump, this.poop.sprite, null, this.poopCollision, this);
+    this.physics.add.overlap(this.trump, this.hat, null, this.hatCollision, this);
     this.physics.add.overlap(this.marty, this.hat, null, this.hatCollision, this)
-    this.physics.add.overlap(this.marty, this.trump.hat, null, this.hatCollision, this);
+    this.physics.add.overlap(this.marty, this.hat, null, this.hatCollision, this);
   }
 
   private createAudio(): void {

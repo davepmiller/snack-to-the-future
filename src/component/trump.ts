@@ -1,6 +1,6 @@
 import * as Phaser from 'phaser';
 import {GameScene} from '../scene/gameScene';
-type Sprite = Phaser.Physics.Arcade.Sprite;
+
 type AnimationFrame = Phaser.Types.Animations.AnimationFrame;
 
 const SCALE_X = 0.25;
@@ -13,28 +13,35 @@ const ANIMATION_COMPLETE = 'animationcomplete-';
 const THROW_COMPLETE = ANIMATION_COMPLETE + THROW_KEY;
 const GROUND_KEY = 'ground';
 
-export default class Trump {
-  scene: GameScene;
-  sprite: Sprite;
-  hat: Sprite;
+export default class Trump extends Phaser.Physics.Arcade.Sprite {
+  gameScene: GameScene;
   offsetJumpY: number;
   offsetX: number;
   offsetY: number;
   doThrow: boolean;
 
   constructor(gameScene: GameScene) {
-    this.scene = gameScene;
+    let groundY = gameScene.textures.get(GROUND_KEY).getSourceImage().height;
+    let pos = {x: window.innerWidth / 10, y: window.innerHeight - groundY};
+    super(gameScene, pos.x, pos.y, SPRITE_KEY);
+    this.gameScene = gameScene;
     this.doThrow = false;
+    this.name = SPRITE_KEY;
+    this.scaleX = SCALE_X;
+    this.scaleY = SCALE_Y;
+    this.offsetJumpY = -this.height*2;
+    this.offsetY = this.height/2;
+    this.offsetX = this.width/10;
+    this.gameScene.add.existing(this);
+    this.gameScene.physics.world.enable(this);
+    this.body.setSize(this.width/2, this.offsetY)
+      .setOffset(this.offsetX, this.offsetY);
+    this.createAnimations();
+    this.cruise();
   }
 
   static getSpriteName(): String {
     return SPRITE_KEY;
-  }
-
-  create(): void {
-    this.createSprite();
-    this.createAnimations();
-    this.cruise();
   }
 
   update(): void {
@@ -46,33 +53,19 @@ export default class Trump {
   }
 
   private cruise(): void {
-    this.sprite.anims.play(CRUISE_KEY, true);
+    this.anims.play(CRUISE_KEY, true);
   }
 
   private throw(): void {
-    this.sprite.anims.play(THROW_KEY, true)
+    this.anims.play(THROW_KEY, true)
       .on(THROW_COMPLETE, () => {
         this.doThrow = false;
-        this.scene.hat.doThrow = true;
+        this.gameScene.hat.doThrow = true;
       });
   }
 
-  private createSprite(): void {
-    let groundY = this.scene.textures.get(GROUND_KEY).getSourceImage().height;
-    let pos = {x: window.innerWidth / 10, y: window.innerHeight - groundY};
-    this.sprite = this.scene.physics.add.sprite(pos.x, pos.y, SPRITE_KEY)
-      .setName(SPRITE_KEY)
-      .setScale(SCALE_X, SCALE_Y)
-      .setCollideWorldBounds(true);
-    this.offsetJumpY = -this.sprite.height*2;
-    this.offsetY = this.sprite.height/2;
-    this.offsetX = this.sprite.width/10;
-    this.sprite.body.setSize(this.sprite.width/2, this.offsetY);
-    this.sprite.body.setOffset(this.offsetX, this.offsetY);
-  }
-
   private createAnimations() {
-    let anims = this.scene.anims;
+    let anims = this.gameScene.anims;
     anims.create({
       key: CRUISE_KEY,
       frames: this.cruiseFrames(),

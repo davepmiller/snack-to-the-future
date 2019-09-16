@@ -11,7 +11,7 @@ export default class Hat extends Phaser.Physics.Arcade.Sprite {
   doThrow: boolean;
 
   constructor(gameScene: GameScene) {
-    let pos = gameScene.trump.sprite.getRightCenter();
+    let pos = gameScene.trump.getRightCenter();
     super(gameScene, pos.x, pos.y - 50, HAT_KEY);
     this.scene = gameScene;
     this.doThrow = false;
@@ -29,7 +29,7 @@ export default class Hat extends Phaser.Physics.Arcade.Sprite {
     if (this.x >= this.scene.physics.world.bounds.right) {
       this.visible = false;
       this.setVelocityX(0);
-      this.x = this.scene.trump.sprite.getRightCenter().x;
+      this.x = this.scene.trump.getRightCenter().x;
     } else if (this.doThrow) {
       this.launchHat();
       this.doThrow = false;
