@@ -1,5 +1,6 @@
 import * as Phaser from 'phaser';
 import {GameScene} from '../scene/gameScene';
+import { SSL_OP_ALLOW_UNSAFE_LEGACY_RENEGOTIATION } from 'constants';
 
 type Sprite = Phaser.Physics.Arcade.Sprite;
 type Gamepad = Phaser.Input.Gamepad.Gamepad;
@@ -10,29 +11,40 @@ const SCALE_Y = 0.25;
 const SPRITE_KEY = 'marty';
 const FRAME_RATE = 15;
 
-export default class Marty {
-  sprite: Sprite;
-  scene: GameScene;
+export default class Marty extends Phaser.Physics.Arcade.Sprite {
+  // sprite: Sprite;
+  gameScene: GameScene;
   offsetJumpY: number;
   offsetX: number;
   offsetY: number;
 
-  constructor(scene: GameScene) {
-    this.scene = scene;
-  }
-
-  create(): void {
-    this.createSprite();
+  constructor(gameScene: GameScene) {
+    let groundY = gameScene.textures.get('ground').getSourceImage().height;
+    let pos = {x: window.innerWidth / 2.5, y: window.innerHeight - groundY};
+    super(gameScene, pos.x, pos.y, SPRITE_KEY);
+    this.gameScene = gameScene;
+    this.name = SPRITE_KEY;
+    this.scaleX = SCALE_X;
+    this.scaleY = SCALE_Y;
+    this.offsetJumpY = -this.height*2;
+    this.offsetY = this.height/2;
+    this.offsetX = this.width/10;
+    this.gameScene.physics.world.enable(this);
+    this.body.setSize(this.width/2, this.offsetY)
+      .setOffset(this.offsetX, this.offsetY)
+      .customSeparateY = true;
+    this.gameScene.add.existing(this);
     this.createAnimations();
     this.createAnimationCallbacks();
     this.createInputHandling();
     this.cruise();
   }
 
-  update(): void {
-    if (this.sprite.body.touching.down) {
-      this.cruise();
-    }
+  create(): void {
+    this.createAnimations();
+    this.createAnimationCallbacks();
+    this.createInputHandling();
+    this.cruise();
   }
 
   static getSpriteName(): String {
@@ -40,20 +52,19 @@ export default class Marty {
   }
 
   private cruise(): void {
-    this.sprite.anims.play('cruise', true);
+    this.anims.play('cruise', true);
   }
 
   private ollie(): void {
-
-    this.sprite.anims.play('ollie', true);
+    this.anims.play('ollie', true);
   }
 
   private thread(): void {
-    this.sprite.anims.play('thread', true);
+    this.anims.play('thread', true);
   }
 
   private createInputHandling(): void {
-    this.scene.input.gamepad.on(
+    this.gameScene.input.gamepad.on(
       'down',
       (pad: Gamepad) => {
         if (pad.A) {
@@ -64,45 +75,30 @@ export default class Marty {
       }
     );
 
-    this.scene.cursors.space.onDown = (e) => {
+    this.gameScene.cursors.space.onDown = (e) => {
       this.ollie();
     }
 
-    this.scene.cursors.up.onDown = (e) => {
+    this.gameScene.cursors.up.onDown = (e) => {
       this.thread();
     }
   }
 
-  private createSprite(): void {
-    let groundY = this.scene.textures.get('ground').getSourceImage().height;
-    let pos = {x: window.innerWidth / 2.5, y: window.innerHeight - groundY};
-    this.sprite = this.scene.physics.add.sprite(pos.x, pos.y, SPRITE_KEY)
-      .setName(SPRITE_KEY)
-      .setScale(SCALE_X, SCALE_Y)
-      .setCollideWorldBounds(true);
-    this.offsetJumpY = -this.sprite.height*2;
-    this.offsetY = this.sprite.height/2;
-    this.offsetX = this.sprite.width/10;
-    this.sprite.body.setSize(this.sprite.width/2, this.offsetY)
-      .setOffset(this.offsetX, this.offsetY)
-      .customSeparateY = true;
-  }
-
   private createAnimations(): void {
-    this.scene.anims.create({
+    this.gameScene.anims.create({
       key: 'cruise',
       frames: this.cruiseFrames(),
       frameRate: FRAME_RATE,
       repeat: -1,
     });
 
-    this.scene.anims.create({
+    this.gameScene.anims.create({
       key: 'ollie',
       frames: this.ollieFrames(),
       frameRate: FRAME_RATE,
     });
 
-    this.scene.anims.create({
+    this.gameScene.anims.create({
       key: 'thread',
       frames: this.threadFrames(),
       frameRate: FRAME_RATE,
@@ -150,18 +146,18 @@ export default class Marty {
   }
 
   private createAnimationCallbacks(): void {
-    this.sprite.on('animationstart-ollie', () => {
-      this.sprite.body.setOffset(this.offsetX, this.offsetJumpY);
+    this.on('animationstart-ollie', () => {
+      this.body.setOffset(this.offsetX, this.offsetJumpY);
     });
-    this.sprite.on('animationcomplete-ollie', () => {
-      this.sprite.body.setOffset(this.offsetX, this.offsetY);
+    this.on('animationcomplete-ollie', () => {
+      this.body.setOffset(this.offsetX, this.offsetY);
       this.cruise();
     });
-    this.sprite.on('animationstart-thread', () => {
-      this.sprite.body.setOffset(this.offsetX, this.offsetJumpY);
+    this.on('animationstart-thread', () => {
+      this.body.setOffset(this.offsetX, this.offsetJumpY);
     });
-    this.sprite.on('animationcomplete-thread', () => {
-      this.sprite.body.setOffset(this.offsetX, this.offsetY);
+    this.on('animationcomplete-thread', () => {
+      this.body.setOffset(this.offsetX, this.offsetY);
       this.cruise();;
     });
   }

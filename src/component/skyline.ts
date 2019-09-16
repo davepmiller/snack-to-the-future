@@ -7,7 +7,7 @@ export default class Skyline extends Phaser.GameObjects.TileSprite {
     scene.add.existing(this);
   }
 
-  parallax() {
+  update() {
     this.tilePositionX += 1;
   }
 }

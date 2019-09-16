@@ -48,6 +48,7 @@ export class BootScene extends Phaser.Scene {
   }
 
   update(): void {
+    this.scene.stop('BootScene');
     this.scene.start('TitleScene');
   }
 

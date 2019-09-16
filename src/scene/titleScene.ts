@@ -15,7 +15,7 @@ export class TitleScene extends Phaser.Scene {
 
   constructor () {
     super({
-      key: "TitleScene"
+      key: 'TitleScene'
     });
   }
 
@@ -27,6 +27,7 @@ export class TitleScene extends Phaser.Scene {
 
   update(): void {
     if (this.start === true) {
+      this.scene.start('TitleScene');
       this.scene.start('GameScene');
     }
 
@@ -34,10 +35,10 @@ export class TitleScene extends Phaser.Scene {
   }
 
   private createImages(): void {
-    this.mainImage = this.add.image(0, 0, "startScreen");
+    this.mainImage = this.add.image(0, 0, 'startScreen');
     this.mainImage.setOrigin(0, 0);
     this.mainImage.setDisplaySize(window.innerWidth, window.innerHeight);
-    this.pressButtonImage = this.add.image(0, 0, "pressToBegin");
+    this.pressButtonImage = this.add.image(0, 0, 'pressToBegin');
     let pbiX = this.pressButtonImage.width / 6;
     let pbiY = window.innerHeight / 2 + 210;
     this.pressButtonImage.setPosition(pbiX, pbiY);
