@@ -127,4 +127,4 @@ export class GameScene extends Phaser.Scene {
     this.audio.create(this.sound);
     this.audio.playTheme();
   }
-}
+};

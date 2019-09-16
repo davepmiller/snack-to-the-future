@@ -4,4 +4,4 @@ export default class Background extends Phaser.GameObjects.TileSprite {
     scene.add.existing(this);
     this.setDepth(-1);;
   }
-}
+};

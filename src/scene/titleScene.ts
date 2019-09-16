@@ -63,4 +63,4 @@ export class TitleScene extends Phaser.Scene {
       this.pressButtonImage.visible = !this.pressButtonImage.visible;
     }
   }
-}
+};

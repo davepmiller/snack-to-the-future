@@ -10,4 +10,4 @@ export default class Midground extends Phaser.GameObjects.TileSprite {
   update() {
     this.tilePositionX += 5;
   }
-}
+};

@@ -98,4 +98,4 @@ export default class Trump extends Phaser.Physics.Arcade.Sprite {
 
     return frames;
   }
-}
+};

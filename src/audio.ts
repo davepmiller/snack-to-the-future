@@ -26,4 +26,4 @@ export default class Audio {
   public stopTheme(): void {
     this.theme.stop();
   }
-}
+};

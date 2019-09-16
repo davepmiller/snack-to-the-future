@@ -42,4 +42,4 @@ export class GameOverScene extends Phaser.Scene {
 
     return frames;
   }
-}
+};

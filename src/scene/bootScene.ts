@@ -16,7 +16,7 @@ export class BootScene extends Phaser.Scene {
     this.cameras.main.setBackgroundColor(0x000000);
     this.createLoadingGraphics();
     this.load.on(
-      "progress",
+      'progress',
       (value) => {
         this.progressBar.clear();
         this.progressBar.fillStyle(PROGRESS_BAR_COLOR, 1);
@@ -31,7 +31,7 @@ export class BootScene extends Phaser.Scene {
     );
 
     this.load.on(
-      "complete",
+      'complete',
       () => {
         console.log('Done loading assets');
         this.progressBar.destroy();
@@ -40,11 +40,7 @@ export class BootScene extends Phaser.Scene {
       this
     );
 
-    this.load.pack(
-      "preload",
-      "./../assets/pack.json",
-      "preload"
-    );
+    this.load.pack('preload', './../assets/pack.json');
   }
 
   update(): void {
@@ -63,4 +59,4 @@ export class BootScene extends Phaser.Scene {
     );
     this.progressBar = this.add.graphics();
   }
-}
+};

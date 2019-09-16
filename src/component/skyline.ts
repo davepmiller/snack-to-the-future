@@ -10,4 +10,4 @@ export default class Skyline extends Phaser.GameObjects.TileSprite {
   update() {
     this.tilePositionX += 1;
   }
-}
+};
