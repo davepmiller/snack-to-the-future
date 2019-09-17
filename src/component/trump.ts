@@ -3,8 +3,6 @@ import {GameScene} from '../scene/gameScene';
 
 type AnimationFrame = Phaser.Types.Animations.AnimationFrame;
 
-const SCALE_X = 0.25;
-const SCALE_Y = 0.25;
 const SPRITE_KEY = 'trump';
 const FRAME_RATE = 15;
 const CRUISE_KEY = 'trumpCruise';
@@ -26,8 +24,6 @@ export default class Trump extends Phaser.Physics.Arcade.Sprite {
     this.gameScene = gameScene;
     this.doThrow = false;
     this.name = SPRITE_KEY;
-    this.scaleX = SCALE_X;
-    this.scaleY = SCALE_Y;
     this.offsetY = this.height/2;
     this.offsetX = this.width/10;
     this.gameScene.add.existing(this);
@@ -84,6 +80,10 @@ export default class Trump extends Phaser.Physics.Arcade.Sprite {
   private cruiseFrames(): AnimationFrame[] {
     var frames = [];
     for (let i = 0; i < 9; i++) {
+      frames.push({key: SPRITE_KEY, frame: i});
+    }
+
+    for (let i = 23; i < 30; i++) {
       frames.push({key: SPRITE_KEY, frame: i});
     }
 

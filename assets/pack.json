@@ -5,32 +5,32 @@
         "key": "marty",
         "url": "./assets/sprite/marty.png",
         "frameConfig": {
-          "frameWidth": 1000,
-          "frameHeight": 1000
+          "frameWidth": 250,
+          "frameHeight": 250
         }
       },{
         "type": "spritesheet",
         "key": "trump",
         "url": "./assets/sprite/trump.png",
         "frameConfig": {
-          "frameWidth": 1000,
-          "frameHeight": 1000
+          "frameWidth": 250,
+          "frameHeight": 252
         }
       },{
         "type": "spritesheet",
         "key": "poop",
         "url": "./assets/sprite/poop.png",
         "frameConfig": {
-          "frameWidth": 1000,
-          "frameHeight": 1000
+          "frameWidth": 250,
+          "frameHeight": 250
         }
       },{
         "type": "spritesheet",
         "key": "hat",
         "url": "./assets/sprite/hat.png",
         "frameConfig": {
-          "frameWidth": 375,
-          "frameHeight": 375
+          "frameWidth": 80,
+          "frameHeight": 80
         }
       },{
         "type": "spritesheet",

@@ -1,8 +1,6 @@
 import * as Phaser from 'phaser';
 import {GameScene} from '../scene/gameScene';
 
-const SCALE_X = 0.25;
-const SCALE_Y = 0.25;
 const SPRITE_KEY = 'poop';
 const VELOCITY_X = 400 * -1;
 
@@ -21,8 +19,6 @@ export default class Poop extends Phaser.Physics.Arcade.Sprite {
     super(scene, pos.x, pos.y, SPRITE_KEY);
     this.gameScene = scene;
     this.fresh = true;
-    this.scaleX = SCALE_X;
-    this.scaleY = SCALE_Y;
     this.gameScene.physics.world.enable(this);
     // adjust physics body for collisions
     this.body.setSize(this.width/2, this.height/2)

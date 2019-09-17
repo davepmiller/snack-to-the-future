@@ -4,8 +4,6 @@ import {GameScene} from '../scene/gameScene';
 type Gamepad = Phaser.Input.Gamepad.Gamepad;
 type AnimationFrame = Phaser.Types.Animations.AnimationFrame;
 
-const SCALE_X = 0.25;
-const SCALE_Y = 0.25;
 const SPRITE_KEY = 'marty';
 const CRUISE_KEY = 'cruise';
 const OLLIE_KEY = 'ollie';
@@ -24,8 +22,6 @@ export default class Marty extends Phaser.Physics.Arcade.Sprite {
     super(gameScene, pos.x, pos.y, SPRITE_KEY);
     this.gameScene = gameScene;
     this.name = SPRITE_KEY;
-    this.scaleX = SCALE_X;
-    this.scaleY = SCALE_Y;
     this.offsetJumpY = -this.height*2;
     this.offsetY = this.height/2;
     this.offsetX = this.width/10;
@@ -100,12 +96,19 @@ export default class Marty extends Phaser.Physics.Arcade.Sprite {
 
   private cruiseFrames(): AnimationFrame[] {
     var frames = [];
-    for (let i = 0; i < 9; i++) {
+    for (let i = 0; i < 4; i++) {
+      frames.push({key: SPRITE_KEY, frame: i});
+      frames.push({key: SPRITE_KEY, frame: i});
       frames.push({key: SPRITE_KEY, frame: i});
       frames.push({key: SPRITE_KEY, frame: i});
     }
 
-    for (let i = 34; i < 53; i++) {
+
+    for (let i = 34; i < 45; i++) {
+      frames.push({key: SPRITE_KEY, frame: i});
+    }
+
+    for (let i = 48; i < 54; i++) {
       frames.push({key: SPRITE_KEY, frame: i});
     }
 

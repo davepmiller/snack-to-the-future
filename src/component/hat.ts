@@ -1,7 +1,5 @@
 import {GameScene} from '../scene/gameScene';
 
-const SCALE_X = 0.25;
-const SCALE_Y = 0.25;
 const SPRITE_KEY = 'hat';
 const HAT_VELOCITY = 500;
 const FRAME_RATE = 15;
@@ -17,8 +15,6 @@ export default class Hat extends Phaser.Physics.Arcade.Sprite {
     super(gameScene, pos.x, pos.y - 50, SPRITE_KEY);
     this.gameScene = gameScene;
     this.hasHit = false;
-    this.scaleX = SCALE_X;
-    this.scaleY = SCALE_Y;
     this.name = SPRITE_KEY;
     this.visible = false;
     this.offsetY = this.height/2;
