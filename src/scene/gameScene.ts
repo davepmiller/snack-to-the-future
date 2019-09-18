@@ -8,6 +8,7 @@ import Midground from '../component/midground';
 import Background from '../component/background';
 import Skyline from '../component/skyline';
 import HealthStatus from '../component/healthStatus';
+import GameData from '../gameData';
 
 type CursorKeys = Phaser.Types.Input.Keyboard.CursorKeys;
 type Sprite = Phaser.Physics.Arcade.Sprite;
@@ -25,6 +26,7 @@ export class GameScene extends Phaser.Scene {
   skyline: Skyline;
   midground: Midground;
   healthStatus: HealthStatus;
+  gameData: GameData;
 
   constructor() {
     super({
@@ -34,29 +36,30 @@ export class GameScene extends Phaser.Scene {
     });
   }
   
+  init(gameData: GameData): void {
+    this.gameData = gameData;
+  }
+
   preload(): void {
     this.audio = new Audio(this);
     this.createBackground();
-    let groundHeight = this.textures.get('ground').getSourceImage().height/2;
-    let y = window.innerHeight - groundHeight;
-    this.physics.world.setBounds(0,0,window.innerWidth,y,true,true,false,true);
-    this.ground = this.physics.add.staticGroup();
-    this.ground.create(window.innerWidth / 2, y, 'ground').refreshBody();
-    this.cursors = this.input.keyboard.createCursorKeys();
-    this.trump = new Trump(this);
-    this.hat = new Hat(this);
-    this.marty = new Marty(this);
-    this.poop = new Poop(this);
+    this.createInputHandling();
+    this.createComponents();
     this.createColliders();
   }
-
+  
   create(): void {
     this.registry.set('hatDoThrow', false);
     this.registry.set('trumpDoThrow', false);
-    this.createAudio();
+    console.log(this.audio);
+    this.audio.create();
   }
 
   update(): void {
+    if (!this.audio.themeIsPlaying()) {
+      this.audio.playTheme();
+    }
+
     this.skyline.update();
     this.midground.update();
     this.poop.update();
@@ -75,15 +78,20 @@ export class GameScene extends Phaser.Scene {
     }
   }
 
+  render(): void {
+    console.log('render');
+  }
+
   poopCollision(char: Sprite, poop: Sprite): boolean {
     if (this.poop.fresh) {
       this.poop.fresh = false;
       if (char.name === 'trump') {
         this.healthStatus.trumpHit();
-        // this.trump.doThrow = true;
         this.registry.set('trumpDoThrow', true);
       } else if (char.name === 'marty') {
-        this.healthStatus.martyHit();
+        this.gameData.health--;
+        this.audio.stopTheme();
+        this.scene.restart();
       }
     }
 
@@ -99,7 +107,9 @@ export class GameScene extends Phaser.Scene {
         if (hat.x >= char.x) {
           this.hat.reset();
           this.hat.hasHit = true;
-          this.healthStatus.martyHit();
+          this.gameData.health--;
+          this.audio.stopTheme();
+          this.scene.restart(this.gameData);
         }
       }
     }
@@ -113,6 +123,7 @@ export class GameScene extends Phaser.Scene {
     this.skyline = new Skyline(this);
     this.midground = new Midground(this);
     this.healthStatus = new HealthStatus(this);
+    this.createGround();
   }
 
   private createColliders(): void {
@@ -123,8 +134,23 @@ export class GameScene extends Phaser.Scene {
     this.physics.add.overlap(this.marty, this.hat, null, this.hatCollision, this);
   }
 
-  private createAudio(): void {
-    this.audio.create(this.sound);
-    this.audio.playTheme();
+  private createGround(): void {
+    let groundHeight = this.textures.get('ground').getSourceImage().height/2;
+    let y = window.innerHeight - groundHeight;
+    this.physics.world.setBounds(0,0,window.innerWidth,y,true,true,false,true);
+    this.ground = this.physics.add.staticGroup();
+    this.ground.create(window.innerWidth / 2, y, 'ground').refreshBody();
+  }
+
+  private createComponents(): void {
+    this.trump = new Trump(this);
+    this.hat = new Hat(this);
+    this.marty = new Marty(this);
+    this.poop = new Poop(this);
+  }
+
+  private createInputHandling(): void {
+    this.cursors = this.input.keyboard.createCursorKeys();
+    this.cursors.shift.onDown = () => this.scene.pause();
   }
 };

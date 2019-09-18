@@ -96,19 +96,12 @@ export default class Marty extends Phaser.Physics.Arcade.Sprite {
 
   private cruiseFrames(): AnimationFrame[] {
     var frames = [];
-    for (let i = 0; i < 4; i++) {
-      frames.push({key: SPRITE_KEY, frame: i});
-      frames.push({key: SPRITE_KEY, frame: i});
+    for (let i = 0; i < 9; i++) {
       frames.push({key: SPRITE_KEY, frame: i});
       frames.push({key: SPRITE_KEY, frame: i});
     }
 
-
-    for (let i = 34; i < 45; i++) {
-      frames.push({key: SPRITE_KEY, frame: i});
-    }
-
-    for (let i = 48; i < 54; i++) {
+    for (let i = 34; i < 54; i++) {
       frames.push({key: SPRITE_KEY, frame: i});
     }
 

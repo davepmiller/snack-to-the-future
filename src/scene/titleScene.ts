@@ -1,7 +1,6 @@
 import * as Phaser from 'phaser';
 
 type CursorKeys = Phaser.Types.Input.Keyboard.CursorKeys;
-type Gamepad = Phaser.Input.Gamepad.Gamepad;
 type Image = Phaser.GameObjects.Image;
 
 const PRESS_FLASH_FREQ = 30;
@@ -28,7 +27,7 @@ export class TitleScene extends Phaser.Scene {
   update(): void {
     if (this.start === true) {
       this.scene.start('TitleScene');
-      this.scene.start('GameScene');
+      this.scene.start('GameScene', {maxHealth: 3, health: 3, score: 0});
     }
 
     this.toggleVisibility();

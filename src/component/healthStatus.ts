@@ -1,4 +1,5 @@
 import {GameScene} from '../scene/gameScene';
+import GameData from '../gameData';
 
 type Image = Phaser.GameObjects.Image;
 
@@ -6,33 +7,26 @@ const EMPTY = 0x565656;
 const HEALTH_X = 40;
 const HEALTH_Y = 40;
 const HEALTH_PAD = 5;
-const MARTY_HEALTH = 3;
 const TRUMP_HEALTH = 5;
 
 export default class HealthStatus {
-  scene: GameScene;
+  private gameScene: GameScene;
+  private gameData: GameData;
   private martyHealthBar: Image[];
   private trumpHealthBar: Image[];
-  private martyHitPoints: number;
   private trumpHitPoints: number;
 
-  constructor(scene: GameScene) {
-    this.scene = scene;
-    this.martyHitPoints = MARTY_HEALTH;
+  constructor(gameScene: GameScene) {
+    this.gameScene = gameScene;
+    this.gameData = gameScene.gameData;
     this.trumpHitPoints = TRUMP_HEALTH;
-    this.drawMartyHealth(this.martyHitPoints);
+    this.drawInitialMartyHealth();
+    this.updateMartyHealth();
     this.drawTrumpHealth(this.trumpHitPoints);
   }
 
-  public martyHit(): void {
-    this.martyHitPoints--;
-    if (this.martyHitPoints >= 0) {
-      this.martyHealthBar[this.martyHitPoints].setTint(EMPTY);
-    }
-  }
-
   public martyDead(): boolean {
-    return this.martyHitPoints <= 0;
+    return this.gameData.health <= 0;
   }
 
   public trumpHit(): void {
@@ -46,14 +40,24 @@ export default class HealthStatus {
     return this.trumpHitPoints <= 0;
   }
 
-  private drawMartyHealth(count: number) {
+  private drawInitialMartyHealth(): void {
     this.martyHealthBar = []
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < this.gameData.maxHealth; i++) {
       this.martyHealthBar.push(
-        this.scene.add.image(
+        this.gameScene.add.image(
           HEALTH_X * (i+1) + HEALTH_PAD * i,
           HEALTH_Y,
           'martyHealth').setScale(0.05, 0.05));
+    }
+  }
+
+  private updateMartyHealth(): void {
+    let health = this.gameData.health;
+    if (health === 2) {
+      this.martyHealthBar[2].setTint(EMPTY);
+    } else if (health === 1) {
+      this.martyHealthBar[2].setTint(EMPTY);
+      this.martyHealthBar[1].setTint(EMPTY);
     }
   }
 
@@ -61,7 +65,7 @@ export default class HealthStatus {
     this.trumpHealthBar = [];
     for (let i = 0; i < count; i++){
       this.trumpHealthBar.push(
-        this.scene.add.image(
+        this.gameScene.add.image(
           HEALTH_X * (i+1) + HEALTH_PAD * i,
           HEALTH_Y * 2 + HEALTH_PAD,
           'trumpHealth'
