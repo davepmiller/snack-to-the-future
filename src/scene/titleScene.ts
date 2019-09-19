@@ -1,4 +1,5 @@
 import * as Phaser from 'phaser';
+import Audio from '../audio';
 
 type CursorKeys = Phaser.Types.Input.Keyboard.CursorKeys;
 type Image = Phaser.GameObjects.Image;
@@ -18,15 +19,19 @@ export class TitleScene extends Phaser.Scene {
     });
   }
 
+  preload(): void {
+    this.game.sound.stopAll();
+  }
+
   create(): void {
     this.visCnt = 0;
     this.createImages();
     this.createInput();
+    this.sound.play('powerOfLove');
   }
 
   update(): void {
     if (this.start === true) {
-      this.scene.start('TitleScene');
       this.scene.start('GameScene', {maxHealth: 3, health: 3, score: 0});
     }
 

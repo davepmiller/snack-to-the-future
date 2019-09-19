@@ -14,7 +14,41 @@ export class BootScene extends Phaser.Scene {
 
   preload(): void {
     this.cameras.main.setBackgroundColor(0x000000);
+    this.loadAudio();
     this.createLoadingGraphics();
+    this.loadAssets();
+  }
+
+  create(): void {
+    this.sound.add('powerOfLove', {loop: true});
+  }
+
+  update(): void {
+    this.scene.start('TitleScene');
+  }
+
+  private createLoadingGraphics(): void {
+    this.loadingBar = this.add.graphics();
+    this.loadingBar.fillStyle(0xffffff, 1);
+    this.loadingBar.fillRect(
+      this.cameras.main.width / 4 - 2,
+      this.cameras.main.height / 2 - 18,
+      this.cameras.main.width / 2 + 4,
+      20
+    );
+    this.progressBar = this.add.graphics();
+  }
+
+  private loadAudio(): void {
+    this.load.audio(
+      'powerOfLove', [
+        'assets/audio/powerOfLove.mp3',
+        'assets/audio/powerOfLove.ogg'
+      ]
+    )
+  }
+
+  private loadAssets(): void {
     this.load.on(
       'progress',
       (value) => {
@@ -41,22 +75,5 @@ export class BootScene extends Phaser.Scene {
     );
 
     this.load.pack('preload', './../assets/pack.json');
-  }
-
-  update(): void {
-    this.scene.stop('BootScene');
-    this.scene.start('TitleScene');
-  }
-
-  private createLoadingGraphics(): void {
-    this.loadingBar = this.add.graphics();
-    this.loadingBar.fillStyle(0xffffff, 1);
-    this.loadingBar.fillRect(
-      this.cameras.main.width / 4 - 2,
-      this.cameras.main.height / 2 - 18,
-      this.cameras.main.width / 2 + 4,
-      20
-    );
-    this.progressBar = this.add.graphics();
   }
 };

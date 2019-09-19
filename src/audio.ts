@@ -1,14 +1,12 @@
 import * as Phaser from 'phaser';
-import {GameScene} from './scene/gameScene';
 
-type BaseSoundManager = Phaser.Sound.BaseSoundManager;
 type BaseSound = Phaser.Sound.BaseSound;
 
 export default class Audio {
-  private scene: GameScene;
+  private scene: Phaser.Scene;
   private theme: BaseSound;
   
-  constructor (scene: GameScene) {
+  constructor (scene: Phaser.Scene) {
     this.scene = scene;
     this.scene.load.audio(
       'power_of_love', [
@@ -28,6 +26,10 @@ export default class Audio {
 
   public stopTheme(): void {
     this.theme.stop();
+  }
+
+  public destroyTheme(): void {
+    this.theme.destroy();
   }
 
   public themeIsPlaying(): boolean {

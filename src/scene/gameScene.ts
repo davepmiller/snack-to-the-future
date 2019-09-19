@@ -15,7 +15,6 @@ type Sprite = Phaser.Physics.Arcade.Sprite;
 type Ground = Phaser.Physics.Arcade.StaticGroup;
 
 export class GameScene extends Phaser.Scene {
-  audio: Audio;
   cursors: CursorKeys;
   marty: Marty;
   trump: Trump;
@@ -41,7 +40,6 @@ export class GameScene extends Phaser.Scene {
   }
 
   preload(): void {
-    this.audio = new Audio(this);
     this.createBackground();
     this.createInputHandling();
     this.createComponents();
@@ -51,13 +49,14 @@ export class GameScene extends Phaser.Scene {
   create(): void {
     this.registry.set('hatDoThrow', false);
     this.registry.set('trumpDoThrow', false);
-    console.log(this.audio);
-    this.audio.create();
   }
 
   update(): void {
-    if (!this.audio.themeIsPlaying()) {
-      this.audio.playTheme();
+    if (this.healthStatus.martyDead()) {
+      this.scene.start('GameOverScene');
+    } else if (this.healthStatus.trumpDead()) {
+      // this.audio.stopTheme();
+      this.scene.start('EndScene');
     }
 
     this.skyline.update();
@@ -67,14 +66,6 @@ export class GameScene extends Phaser.Scene {
     this.hat.update();
     if (!this.poop.active) {
       this.poop.replaceSprite();
-    }
-
-    if (this.healthStatus.martyDead()) {
-      this.audio.stopTheme();
-      this.scene.stop('GameScene');
-      this.scene.start('GameOverScene');
-    } else if (this.healthStatus.trumpDead()) {
-      // end scene
     }
   }
 
@@ -90,8 +81,9 @@ export class GameScene extends Phaser.Scene {
         this.registry.set('trumpDoThrow', true);
       } else if (char.name === 'marty') {
         this.gameData.health--;
-        this.audio.stopTheme();
-        this.scene.restart();
+        if (this.gameData.health > 0) {
+          this.scene.start('GameScene', this.gameData);
+        }
       }
     }
 
@@ -108,8 +100,9 @@ export class GameScene extends Phaser.Scene {
           this.hat.reset();
           this.hat.hasHit = true;
           this.gameData.health--;
-          this.audio.stopTheme();
-          this.scene.restart(this.gameData);
+          if (this.gameData.health > 0) {
+            this.scene.start('GameScene', this.gameData);
+          }
         }
       }
     }

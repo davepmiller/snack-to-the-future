@@ -3,6 +3,7 @@ import {BootScene} from './scene/bootScene';
 import {TitleScene} from './scene/titleScene';
 import {GameScene} from './scene/gameScene';
 import {GameOverScene} from './scene/gameOverScene';
+import EndScene from './scene/endScene';
 
 type GameConfig = Phaser.Types.Core.GameConfig;
 
@@ -24,7 +25,7 @@ export const config: GameConfig = {
     gamepad: true
   },
   backgroundColor: '#000000',
-  scene: [BootScene, TitleScene, GameScene, GameOverScene]
+  scene: [BootScene, TitleScene, GameScene, GameOverScene, EndScene],
 };
 
 export class Game extends Phaser.Game {
