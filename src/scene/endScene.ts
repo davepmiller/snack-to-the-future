@@ -38,19 +38,17 @@ export default class EndScene extends Phaser.Scene {
         }
       }
       loop();
-    })
-    this.video.addEventListener('ended', function() {
-      game.goNextScene();
-    })
-    this.video.addEventListener('pause', function() {
-      game.goNextScene();
-    })
-    this.movieFrame.on('pointerdown', () => {
-      this.video.pause();
-    })
+    });
+
+    this.video.addEventListener('ended', () => game.goNextScene());
+    this.video.addEventListener('pause', () => game.goNextScene());
+    this.movieFrame.on('pointerdown', () => game.video.pause());
+    this.input.gamepad.on('down', () => game.video.pause());
+    this.input.keyboard.on('keydown-Q', () => game.video.pause());
   }
 
   goNextScene(): void {
+    this.video.pause();
     this.video.remove();
     this.movieTexture.destroy();
     this.scene.start('TitleScene');
