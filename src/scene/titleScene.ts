@@ -1,5 +1,4 @@
 import * as Phaser from 'phaser';
-import Audio from '../audio';
 
 type CursorKeys = Phaser.Types.Input.Keyboard.CursorKeys;
 type Image = Phaser.GameObjects.Image;
@@ -27,7 +26,7 @@ export class TitleScene extends Phaser.Scene {
     this.visCnt = 0;
     this.createImages();
     this.createInput();
-    this.sound.play('powerOfLove');
+    this.sound.play('powerOfLove', {loop: true});
   }
 
   update(): void {
