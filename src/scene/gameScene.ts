@@ -7,11 +7,13 @@ import Midground from '../component/midground';
 import Background from '../component/background';
 import Skyline from '../component/skyline';
 import HealthStatus from '../component/healthStatus';
+import Coin from '../component/coin';
 import GameData from '../gameData';
 
 type CursorKeys = Phaser.Types.Input.Keyboard.CursorKeys;
 type Sprite = Phaser.Physics.Arcade.Sprite;
 type Ground = Phaser.Physics.Arcade.StaticGroup;
+// type Group = Phaser.GameObjects.Group;
 
 export class GameScene extends Phaser.Scene {
   cursors: CursorKeys;
@@ -26,6 +28,8 @@ export class GameScene extends Phaser.Scene {
   midground: Midground;
   healthStatus: HealthStatus;
   gameData: GameData;
+  // coins: Group;
+  coin: Coin;
 
   constructor() {
     super({
@@ -51,6 +55,25 @@ export class GameScene extends Phaser.Scene {
     this.registry.set('hatTwoDoThrow', false);
     this.registry.set('trumpDoThrowOne', false);
     this.registry.set('trumpDoThrowTwo', false);
+    // this.coins = this.add.group({
+    //   classType: Coin,
+    //   maxSize: 10,
+    //   runChildUpdate: true
+    // });
+    this.coin = new Coin(this);
+    this.physics.add.overlap(
+      this.marty,
+      this.coin,
+      (marty: Marty, coin: Coin) => {
+        this.coin.collect();
+        console.log("HERE");
+      },
+      null,
+      this
+    );
+    // let groundY = this.textures.get('ground').getSourceImage().height;
+    // let pos = {x: window.innerWidth / 2.5, y: window.innerHeight - groundY};
+    // this.coins.create(pos.x, pos.y, null, null, true, true);
   }
 
   update(): void {
@@ -135,6 +158,7 @@ export class GameScene extends Phaser.Scene {
     this.physics.add.overlap(this.trump, this.hatTwo, null, this.hatCollision, this);
     this.physics.add.overlap(this.marty, this.hatOne, null, this.hatCollision, this)
     this.physics.add.overlap(this.marty, this.hatTwo, null, this.hatCollision, this);
+
   }
 
   private createGround(): void {

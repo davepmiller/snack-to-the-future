@@ -51,7 +51,8 @@ export default class HealthStatus {
         this.gameScene.add.image(
           HEALTH_X * (i+1) + HEALTH_PAD * i,
           HEALTH_Y,
-          'martyHealth').setScale(0.05, 0.05));
+          'martyHealth')
+        );
     }
   }
 
@@ -73,7 +74,7 @@ export default class HealthStatus {
           HEALTH_X * (i+1) + HEALTH_PAD * i,
           HEALTH_Y * 2 + HEALTH_PAD,
           'trumpHealth'
-        ).setScale(0.05, 0.05)
+        )
       );
     }
   }

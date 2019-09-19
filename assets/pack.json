@@ -41,6 +41,14 @@
           "frameHeight": 820
         }
       },{
+        "type": "spritesheet",
+        "key": "coin",
+        "url": "./assets/sprite/coin.png",
+        "frameConfig": {
+          "frameWidth": 50,
+          "frameHeight": 50
+        }
+      },{
         "type": "image",
         "key": "startScreen",
         "url": "./assets/image/startScreen.png"
