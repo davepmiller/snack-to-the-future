@@ -1,9 +1,10 @@
 export default class Skyline extends Phaser.GameObjects.TileSprite {
   constructor(scene: Phaser.Scene) {
     let image = scene.textures.get('skyline').getSourceImage()
-    let y = window.innerHeight - image.height / 2;
-    let x = window.innerWidth - image.width / 2;
-    super(scene, x, y, 0, 0, 'skyline');
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+    let pos = {x: width / 2, y: height / 2};
+    super(scene, pos.x, pos.y + image.height/4, width, height, 'skyline');
     scene.add.existing(this);
   }
 

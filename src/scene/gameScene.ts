@@ -138,11 +138,15 @@ export class GameScene extends Phaser.Scene {
   }
 
   private createGround(): void {
-    let groundHeight = this.textures.get('ground').getSourceImage().height/2;
+    let texture = this.textures.get('ground').getSourceImage();
+    let groundHeight = texture.height/2;
     let y = window.innerHeight - groundHeight;
     this.physics.world.setBounds(0,0,window.innerWidth,y,true,true,false,true);
     this.ground = this.physics.add.staticGroup();
-    this.ground.create(window.innerWidth / 2, y, 'ground').refreshBody();
+    this.ground.create(0, y, 'ground').refreshBody();
+    this.ground.create(0 - texture.width, y, 'ground');
+    this.ground.create(texture.width, y, 'ground');
+    this.ground.create(texture.width * 2, y, 'ground');
   }
 
   private createComponents(): void {
