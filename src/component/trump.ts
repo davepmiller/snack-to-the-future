@@ -6,9 +6,11 @@ type AnimationFrame = Phaser.Types.Animations.AnimationFrame;
 const SPRITE_KEY = 'trump';
 const FRAME_RATE = 15;
 const CRUISE_KEY = 'trumpCruise';
-const THROW_KEY = 'trumpThrow';
+const THROW_ONE_KEY = 'trumpThrowOne';
+const THROW_TWO_KEY = 'trumpThrowTwo';
 const ANIMATION_COMPLETE = 'animationcomplete-';
-const THROW_COMPLETE = ANIMATION_COMPLETE + THROW_KEY;
+const THROW_ONE_COMPLETE = ANIMATION_COMPLETE + THROW_ONE_KEY;
+const THROW_TWO_COMPLETE = ANIMATION_COMPLETE + THROW_TWO_KEY;
 const GROUND_KEY = 'ground';
 
 export default class Trump extends Phaser.Physics.Arcade.Sprite {
@@ -33,13 +35,16 @@ export default class Trump extends Phaser.Physics.Arcade.Sprite {
     this.setCollideWorldBounds(true);
     this.createAnimations();
     this.anims.load(CRUISE_KEY);
-    this.anims.load(THROW_KEY);
+    this.anims.load(THROW_ONE_KEY);
+    this.anims.load(THROW_TWO_KEY);
     this.cruise();
   }
 
   update(): void {
-    if (this.gameScene.registry.get('trumpDoThrow') === true) {
-      this.throw();
+    if (this.gameScene.registry.get('trumpDoThrowOne')) {
+      this.throwOne();
+    } else if (this.gameScene.registry.get('trumpDoThrowTwo')) {
+      this.throwTwo();
     } else {
       this.cruise();
     }
@@ -49,13 +54,25 @@ export default class Trump extends Phaser.Physics.Arcade.Sprite {
     this.anims.play(CRUISE_KEY, true);
   }
 
-  private throw(): void {
-    this.anims.play(THROW_KEY, true);
+  private throwOne(): void {
+    this.anims.play(THROW_ONE_KEY, true);
   }
 
-  private throwComplete(): void {
-    this.gameScene.registry.set('trumpDoThrow', false);
-    this.gameScene.registry.set('hatDoThrow', true);
+  private throwTwo(): void {
+    this.anims.play(THROW_TWO_KEY, true);
+  }
+
+  private throwOneComplete(): void {
+    this.gameScene.registry.set('trumpDoThrowOne', false);
+    this.gameScene.registry.set('hatOneDoThrow', true);
+    this.gameScene.time.delayedCall(
+      2000,
+      () => this.gameScene.registry.set('trumpDoThrowTwo', true), null, this);
+  }
+
+  private throwTwoComplete(): void {
+    this.gameScene.registry.set('trumpDoThrowTwo', false);
+    this.gameScene.registry.set('hatTwoDoThrow', true);
   }
 
   private createAnimations() {
@@ -68,13 +85,21 @@ export default class Trump extends Phaser.Physics.Arcade.Sprite {
     });
 
     anims.create({
-      key: THROW_KEY,
+      key: THROW_ONE_KEY,
       frames: this.throwFrames(),
-      frameRate: FRAME_RATE,
+      frameRate: FRAME_RATE * 2,
       repeat: 0
     });
 
-    this.on(THROW_COMPLETE, this.throwComplete);
+    anims.create({
+      key: THROW_TWO_KEY,
+      frames: this.throwFrames(),
+      frameRate: FRAME_RATE * 2,
+      repeat: 0
+    });
+
+    this.on(THROW_ONE_COMPLETE, this.throwOneComplete);
+    this.on(THROW_TWO_COMPLETE, this.throwTwoComplete);
   }
 
   private cruiseFrames(): AnimationFrame[] {

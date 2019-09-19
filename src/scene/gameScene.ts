@@ -2,7 +2,6 @@ import * as Phaser from 'phaser';
 import Marty from '../component/marty';
 import Trump from '../component/trump';
 import Poop from '../component/poop';
-import Audio from '../audio';
 import Hat from '../component/hat';
 import Midground from '../component/midground';
 import Background from '../component/background';
@@ -19,7 +18,8 @@ export class GameScene extends Phaser.Scene {
   marty: Marty;
   trump: Trump;
   poop: Poop;
-  hat: Hat;
+  hatOne: Hat;
+  hatTwo: Hat;
   ground: Ground;
   background: Background;
   skyline: Skyline;
@@ -47,15 +47,16 @@ export class GameScene extends Phaser.Scene {
   }
   
   create(): void {
-    this.registry.set('hatDoThrow', false);
-    this.registry.set('trumpDoThrow', false);
+    this.registry.set('hatOneDoThrow', false);
+    this.registry.set('hatTwoDoThrow', false);
+    this.registry.set('trumpDoThrowOne', false);
+    this.registry.set('trumpDoThrowTwo', false);
   }
 
   update(): void {
     if (this.healthStatus.martyDead()) {
       this.scene.start('GameOverScene');
     } else if (this.healthStatus.trumpDead()) {
-      // this.audio.stopTheme();
       this.scene.start('EndScene');
     }
 
@@ -63,7 +64,8 @@ export class GameScene extends Phaser.Scene {
     this.midground.update();
     this.poop.update();
     this.trump.update();
-    this.hat.update();
+    this.hatOne.update();
+    this.hatTwo.update();
     if (!this.poop.active) {
       this.poop.replaceSprite();
     }
@@ -78,7 +80,9 @@ export class GameScene extends Phaser.Scene {
       this.poop.fresh = false;
       if (char.name === 'trump') {
         this.healthStatus.trumpHit();
-        this.registry.set('trumpDoThrow', true);
+        if (this.healthStatus.trumpHealth() % 2 === 1) {
+          this.registry.set('trumpDoThrowOne', true);
+        }
       } else if (char.name === 'marty') {
         this.gameData.health--;
         if (this.gameData.health > 0) {
@@ -94,11 +98,18 @@ export class GameScene extends Phaser.Scene {
   }
 
   hatCollision(char: Sprite, hat: Sprite): boolean {
-    if (this.hat.hasHit === false) {
+    this.checkHat(this.hatOne, char);
+    this.checkHat(this.hatTwo, char);
+
+    return false;
+  }
+
+  private checkHat(hat: Hat, char: Sprite): void {
+    if (hat.hasHit === false) {
       if (char.name === 'marty') {
         if (hat.x >= char.x) {
-          this.hat.reset();
-          this.hat.hasHit = true;
+          hat.reset();
+          hat.hasHit = true;
           this.gameData.health--;
           if (this.gameData.health > 0) {
             this.scene.start('GameScene', this.gameData);
@@ -106,8 +117,6 @@ export class GameScene extends Phaser.Scene {
         }
       }
     }
-
-    return false;
   }
 
   private createBackground(): void {
@@ -122,9 +131,10 @@ export class GameScene extends Phaser.Scene {
   private createColliders(): void {
     this.physics.add.overlap(this.marty, this.poop, null, this.poopCollision, this);
     this.physics.add.overlap(this.trump, this.poop, null, this.poopCollision, this);
-    this.physics.add.overlap(this.trump, this.hat, null, this.hatCollision, this);
-    this.physics.add.overlap(this.marty, this.hat, null, this.hatCollision, this)
-    this.physics.add.overlap(this.marty, this.hat, null, this.hatCollision, this);
+    this.physics.add.overlap(this.trump, this.hatOne, null, this.hatCollision, this);
+    this.physics.add.overlap(this.trump, this.hatTwo, null, this.hatCollision, this);
+    this.physics.add.overlap(this.marty, this.hatOne, null, this.hatCollision, this)
+    this.physics.add.overlap(this.marty, this.hatTwo, null, this.hatCollision, this);
   }
 
   private createGround(): void {
@@ -137,7 +147,8 @@ export class GameScene extends Phaser.Scene {
 
   private createComponents(): void {
     this.trump = new Trump(this);
-    this.hat = new Hat(this);
+    this.hatOne = new Hat(this, 'hatOne');
+    this.hatTwo = new Hat(this, 'hatTwo');
     this.marty = new Marty(this);
     this.poop = new Poop(this);
   }

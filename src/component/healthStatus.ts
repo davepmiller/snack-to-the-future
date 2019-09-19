@@ -7,7 +7,7 @@ const EMPTY = 0x565656;
 const HEALTH_X = 40;
 const HEALTH_Y = 40;
 const HEALTH_PAD = 5;
-const TRUMP_HEALTH = 5;
+const TRUMP_HEALTH = 7;
 
 export default class HealthStatus {
   private gameScene: GameScene;
@@ -38,6 +38,10 @@ export default class HealthStatus {
 
   public trumpDead(): boolean {
     return this.trumpHitPoints <= 0;
+  }
+
+  public trumpHealth(): number {
+    return this.trumpHitPoints;
   }
 
   private drawInitialMartyHealth(): void {

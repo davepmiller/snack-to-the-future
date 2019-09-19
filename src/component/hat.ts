@@ -1,7 +1,7 @@
 import {GameScene} from '../scene/gameScene';
 
 const SPRITE_KEY = 'hat';
-const HAT_VELOCITY = 500;
+const HAT_VELOCITY = 600;
 const FRAME_RATE = 15;
 
 export default class Hat extends Phaser.Physics.Arcade.Sprite {
@@ -10,12 +10,12 @@ export default class Hat extends Phaser.Physics.Arcade.Sprite {
   offsetX: number;
   offsetY: number;
 
-  constructor(gameScene: GameScene) {
+  constructor(gameScene: GameScene, hatName: string) {
     let pos = gameScene.trump.getRightCenter();
     super(gameScene, pos.x, pos.y - 50, SPRITE_KEY);
     this.gameScene = gameScene;
     this.hasHit = false;
-    this.name = SPRITE_KEY;
+    this.name = hatName;
     this.visible = false;
     this.offsetY = this.height/2;
     this.offsetX = this.width/10;
@@ -30,9 +30,9 @@ export default class Hat extends Phaser.Physics.Arcade.Sprite {
   update(): void {
     if (this.x >= this.gameScene.physics.world.bounds.right) {
       this.reset();
-    } else if (this.gameScene.registry.get('hatDoThrow') === true) {
+    } else if (this.gameScene.registry.get(this.name + 'DoThrow') === true) {
       this.launchHat();
-      this.gameScene.registry.set('hatDoThrow', false);
+      this.gameScene.registry.set(this.name + 'DoThrow', false);
     }
 
     this.anims.play(SPRITE_KEY, true);

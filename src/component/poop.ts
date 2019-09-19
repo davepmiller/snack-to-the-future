@@ -2,7 +2,7 @@ import * as Phaser from 'phaser';
 import {GameScene} from '../scene/gameScene';
 
 const SPRITE_KEY = 'poop';
-const VELOCITY_X = 400 * -1;
+const VELOCITY_X = 450 * -1;
 
 interface Pos {
   x: number,
