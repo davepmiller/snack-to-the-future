@@ -194,7 +194,6 @@ export class GameScene extends Phaser.Scene {
     if (this.updateCounter++ >= 50) {
       this.updateCounter = 0;
       let delay = Phaser.Math.Between(500, 1000);
-      console.log('delay = ' + delay);
       this.time.delayedCall(
         delay,
         () => this.coins.add(new Coin(this), true),
