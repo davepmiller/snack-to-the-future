@@ -17,6 +17,8 @@ export default class GameStatus {
   private trumpHealthBar: Image[];
   private trumpHitPoints: number;
   private scoreText: Text;
+  private highScoreText: Text;
+  private updateCounter: number = 0;
 
   constructor(gameScene: GameScene) {
     this.gameScene = gameScene;
@@ -29,7 +31,10 @@ export default class GameStatus {
   }
 
   public update(): void {
-    this.scoreText.setText(': ' + this.gameData.score);
+    if (this.updateCounter++ >= 50) {
+      this.updateCounter = 0;
+      this.scoreText.setText(this.getScoreText());
+    }
   }
 
   public martyDead(): boolean {
@@ -88,9 +93,30 @@ export default class GameStatus {
 
   private drawScore() {
     let pos = {x: HEALTH_X, y: HEALTH_Y * 3 + HEALTH_PAD};
-    let sprite = this.gameScene.add.sprite(pos.x, pos.y, 'coin')
-      .setFrame(8);
+    let sprite = this.gameScene.add.sprite(pos.x, pos.y, 'coin').setFrame(8);
     this.scoreText = this.gameScene.add.text(
-      pos.x + sprite.width, pos.y + HEALTH_PAD, ': 69420', {fontSize: '16px'});
+      pos.x + sprite.width,
+      pos.y + HEALTH_PAD,
+      this.getScoreText(),
+      {fontSize: '16px'}
+    );
+    // this.highScoreText = this.gameScene.add.text(
+    //   pos.x - sprite.width / 4,
+    //   pos.y + HEALTH_Y + HEALTH_PAD,
+    //   this.getHighScoreText(),
+    //   {fontSize: '16px'}
+    // );
+  }
+
+  private getScoreText(): string {
+    return this.getCurrentText() + ' ' + this.getHighScoreText();
+  }
+
+  private getHighScoreText(): string {
+    return 'HIGH SCORE: ' + this.gameData.highScore;
+  }
+
+  private getCurrentText(): string {
+    return ': ' + this.gameData.score;
   }
 };

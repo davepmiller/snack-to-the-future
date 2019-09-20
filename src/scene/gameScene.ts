@@ -62,7 +62,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   update(): void {
-    this.updateHealtStatus();
+    this.updateHealthStatus();
     this.updateComponents();
   }
 
@@ -135,7 +135,10 @@ export class GameScene extends Phaser.Scene {
       this.coins,
       (marty, coin: Coin) => {
         coin.collect();
-        this.gameData.score += COIN_POINT;
+        this.gameData.score += this.gameData.initialScore;
+        if (this.gameData.score >= this.gameData.highScore) {
+          this.gameData.highScore = this.gameData.score;
+        }
       }
     );
     this.physics.add.overlap(
@@ -182,12 +185,16 @@ export class GameScene extends Phaser.Scene {
     this.cursors.shift.onDown = () => this.scene.pause();
   }
 
-  private updateHealtStatus(): void {
+  private updateHealthStatus(): void {
     this.healthStatus.update();
     if (this.healthStatus.martyDead()) {
-      this.scene.start('GameOverScene');
+      this.gameData.health = 0;
+      this.gameData.score = 0;
+      this.scene.start('GameOverScene', this.gameData);
     } else if (this.healthStatus.trumpDead()) {
-      this.scene.start('EndScene');
+      this.gameData.health = 0;
+      this.gameData.score = 0;
+      this.scene.start('EndScene', this.gameData);
     }
   }
 

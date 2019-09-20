@@ -1,4 +1,5 @@
 import * as Phaser from 'phaser';
+import GameData from '../gameData';
 
 const GAME_WIDTH = window.innerWidth;
 const GAME_HEIGHT = window.innerHeight;
@@ -12,10 +13,15 @@ export default class EndScene extends Phaser.Scene {
   private movieFrame: Phaser.GameObjects.Image
   private movieTexture: Phaser.Textures.CanvasTexture
   private video: HTMLVideoElement
+  private gameData: GameData;
 
   constructor() {
     super({
       key: 'EndScene' })
+  }
+
+  init(gameData: GameData) {
+    this.gameData = gameData;
   }
 
   create(): void {
@@ -51,6 +57,8 @@ export default class EndScene extends Phaser.Scene {
     this.video.pause();
     this.video.remove();
     this.movieTexture.destroy();
-    this.scene.start('TitleScene');
+    this.gameData.health = this.gameData.maxHealth;
+    this.gameData.score = this.gameData.initialScore;
+    this.scene.start('TitleScene', this.gameData);
   }
 }

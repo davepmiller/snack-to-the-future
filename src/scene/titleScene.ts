@@ -1,4 +1,5 @@
 import * as Phaser from 'phaser';
+import GameData from '../gameData';
 
 type CursorKeys = Phaser.Types.Input.Keyboard.CursorKeys;
 type Image = Phaser.GameObjects.Image;
@@ -11,11 +12,26 @@ export class TitleScene extends Phaser.Scene {
   cursors: CursorKeys;
   start: boolean;
   visCnt: number;
+  gameData: GameData;
 
   constructor () {
     super({
       key: 'TitleScene'
     });
+  }
+
+  init(gameData: GameData) {
+    if (gameData.maxHealth == null) {
+      this.gameData = {
+        maxHealth: 3,
+        initialScore: 69420,
+        health: 3,
+        score: 69420,
+        highScore: 69420
+      };
+    } else {
+      this.gameData = gameData;
+    }
   }
 
   preload(): void {
@@ -31,7 +47,7 @@ export class TitleScene extends Phaser.Scene {
 
   update(): void {
     if (this.start === true) {
-      this.scene.start('GameScene', {maxHealth: 3, health: 3, score: 0});
+      this.scene.start('GameScene', this.gameData);
     }
 
     this.toggleVisibility();
