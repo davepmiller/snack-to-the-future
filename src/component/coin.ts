@@ -10,11 +10,10 @@ export default class Coin extends Phaser.Physics.Arcade.Sprite {
 
   constructor(gameScene: GameScene) {
     let groundY = gameScene.textures.get('ground').getSourceImage().height;
-    let pos = {x: window.innerWidth - 300, y: window.innerHeight - groundY - 25};
+    let pos = {x: window.innerWidth - 50, y: window.innerHeight - groundY - 25};
     super(gameScene, pos.x, pos.y, SPRITE_KEY);
     this.gameScene = gameScene;
     this.collecting = false;
-    this.gameScene.add.existing(this);
     this.gameScene.physics.add.existing(this);
     this.setVelocityX(VELOCITY_X);
     this.gameScene.anims.create({
@@ -38,8 +37,12 @@ export default class Coin extends Phaser.Physics.Arcade.Sprite {
       alpha: 0,
       y: this.y - 100,
       duration: 500,
-      ease: 'Power0',
+      ease: 'Power1',
       onComplete: this.destroy.bind(this)
     })
   }
+
+  // destroy(): void {
+  //   this.destroy.bind(this);
+  // }
 }

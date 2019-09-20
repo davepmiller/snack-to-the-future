@@ -13,7 +13,7 @@ import GameData from '../gameData';
 type CursorKeys = Phaser.Types.Input.Keyboard.CursorKeys;
 type Sprite = Phaser.Physics.Arcade.Sprite;
 type Ground = Phaser.Physics.Arcade.StaticGroup;
-// type Group = Phaser.GameObjects.Group;
+type Group = Phaser.GameObjects.Group;
 
 export class GameScene extends Phaser.Scene {
   cursors: CursorKeys;
@@ -28,8 +28,9 @@ export class GameScene extends Phaser.Scene {
   midground: Midground;
   healthStatus: HealthStatus;
   gameData: GameData;
-  // coins: Group;
-  coin: Coin;
+  coins: Group;
+  // coinTimer: Phaser.Time.TimerEvent;
+  updateCounter: number;
 
   constructor() {
     super({
@@ -37,6 +38,7 @@ export class GameScene extends Phaser.Scene {
       active: false,
       visible: false
     });
+    this.updateCounter = 0;
   }
   
   init(gameData: GameData): void {
@@ -55,43 +57,16 @@ export class GameScene extends Phaser.Scene {
     this.registry.set('hatTwoDoThrow', false);
     this.registry.set('trumpDoThrowOne', false);
     this.registry.set('trumpDoThrowTwo', false);
-    // this.coins = this.add.group({
-    //   classType: Coin,
-    //   maxSize: 10,
-    //   runChildUpdate: true
+    // this.coinTimer = this.time.addEvent({
+    //   delay: 500,
+    //   callback: () => this.coins.add(new Coin(this), true),
+    //   loop: true
     // });
-    this.coin = new Coin(this);
-    this.physics.add.overlap(
-      this.marty,
-      this.coin,
-      (marty: Marty, coin: Coin) => {
-        this.coin.collect();
-        console.log("HERE");
-      },
-      null,
-      this
-    );
-    // let groundY = this.textures.get('ground').getSourceImage().height;
-    // let pos = {x: window.innerWidth / 2.5, y: window.innerHeight - groundY};
-    // this.coins.create(pos.x, pos.y, null, null, true, true);
   }
 
   update(): void {
-    if (this.healthStatus.martyDead()) {
-      this.scene.start('GameOverScene');
-    } else if (this.healthStatus.trumpDead()) {
-      this.scene.start('EndScene');
-    }
-
-    this.skyline.update();
-    this.midground.update();
-    this.poop.update();
-    this.trump.update();
-    this.hatOne.update();
-    this.hatTwo.update();
-    if (!this.poop.active) {
-      this.poop.replaceSprite();
-    }
+    this.updateHealtStatus();
+    this.updateComponents();
   }
 
   render(): void {
@@ -158,7 +133,29 @@ export class GameScene extends Phaser.Scene {
     this.physics.add.overlap(this.trump, this.hatTwo, null, this.hatCollision, this);
     this.physics.add.overlap(this.marty, this.hatOne, null, this.hatCollision, this)
     this.physics.add.overlap(this.marty, this.hatTwo, null, this.hatCollision, this);
-
+    this.physics.add.overlap(
+      this.marty,
+      this.coins,
+      (marty, coin: Coin) => {
+        coin.collect();
+      }
+    );
+    this.physics.add.overlap(
+      this.trump,
+      this.coins,
+      (marty, coin: Coin) => {
+        coin.collect();
+      }
+    );
+    this.physics.add.overlap(
+      this.poop,
+      this.coins,
+      (poop, coin: Coin) => {
+        console.log('COIN POOP');
+        coin.destroy();
+        coin.setVisible(false);
+      }
+    );
   }
 
   private createGround(): void {
@@ -174,6 +171,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   private createComponents(): void {
+    this.coins = this.add.group();
     this.trump = new Trump(this);
     this.hatOne = new Hat(this, 'hatOne');
     this.hatTwo = new Hat(this, 'hatTwo');
@@ -184,5 +182,35 @@ export class GameScene extends Phaser.Scene {
   private createInputHandling(): void {
     this.cursors = this.input.keyboard.createCursorKeys();
     this.cursors.shift.onDown = () => this.scene.pause();
+  }
+
+  private updateHealtStatus(): void {
+    if (this.healthStatus.martyDead()) {
+      this.scene.start('GameOverScene');
+    } else if (this.healthStatus.trumpDead()) {
+      this.scene.start('EndScene');
+    }
+  }
+
+  private updateComponents(): void {
+    if (this.updateCounter++ >= 20) {
+      this.updateCounter = 0;
+      this.time.delayedCall(
+        Phaser.Math.Between(300, 800),
+        () => this.coins.add(new Coin(this), true),
+        null,
+        this
+      );
+    }
+
+    this.skyline.update();
+    this.midground.update();
+    this.poop.update();
+    this.trump.update();
+    this.hatOne.update();
+    this.hatTwo.update();
+    if (!this.poop.active) {
+      this.poop.replaceSprite();
+    }
   }
 };
