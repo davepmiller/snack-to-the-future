@@ -95,17 +95,11 @@ export default class GameStatus {
     let pos = {x: HEALTH_X, y: HEALTH_Y * 3 + HEALTH_PAD};
     let sprite = this.gameScene.add.sprite(pos.x, pos.y, 'coin').setFrame(8);
     this.scoreText = this.gameScene.add.text(
-      pos.x + sprite.width,
-      pos.y + HEALTH_PAD,
+      pos.x + sprite.width / 2,
+      pos.y + HEALTH_PAD - sprite.height / 4,
       this.getScoreText(),
       {fontSize: '16px'}
     );
-    // this.highScoreText = this.gameScene.add.text(
-    //   pos.x - sprite.width / 4,
-    //   pos.y + HEALTH_Y + HEALTH_PAD,
-    //   this.getHighScoreText(),
-    //   {fontSize: '16px'}
-    // );
   }
 
   private getScoreText(): string {
