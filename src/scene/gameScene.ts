@@ -6,7 +6,7 @@ import Hat from '../component/hat';
 import Midground from '../component/midground';
 import Background from '../component/background';
 import Skyline from '../component/skyline';
-import HealthStatus from '../component/healthStatus';
+import GameStatus from '../component/gameStatus';
 import Coin from '../component/coin';
 import GameData from '../gameData';
 
@@ -14,6 +14,8 @@ type CursorKeys = Phaser.Types.Input.Keyboard.CursorKeys;
 type Sprite = Phaser.Physics.Arcade.Sprite;
 type Ground = Phaser.Physics.Arcade.StaticGroup;
 type Group = Phaser.GameObjects.Group;
+
+const COIN_POINT = 69420;
 
 export class GameScene extends Phaser.Scene {
   cursors: CursorKeys;
@@ -26,7 +28,7 @@ export class GameScene extends Phaser.Scene {
   background: Background;
   skyline: Skyline;
   midground: Midground;
-  healthStatus: HealthStatus;
+  healthStatus: GameStatus;
   gameData: GameData;
   coins: Group;
   // coinTimer: Phaser.Time.TimerEvent;
@@ -57,11 +59,6 @@ export class GameScene extends Phaser.Scene {
     this.registry.set('hatTwoDoThrow', false);
     this.registry.set('trumpDoThrowOne', false);
     this.registry.set('trumpDoThrowTwo', false);
-    // this.coinTimer = this.time.addEvent({
-    //   delay: 500,
-    //   callback: () => this.coins.add(new Coin(this), true),
-    //   loop: true
-    // });
   }
 
   update(): void {
@@ -122,7 +119,7 @@ export class GameScene extends Phaser.Scene {
     this.background = new Background(this);
     this.skyline = new Skyline(this);
     this.midground = new Midground(this);
-    this.healthStatus = new HealthStatus(this);
+    this.healthStatus = new GameStatus(this);
     this.createGround();
   }
 
@@ -138,6 +135,7 @@ export class GameScene extends Phaser.Scene {
       this.coins,
       (marty, coin: Coin) => {
         coin.collect();
+        this.gameData.score += COIN_POINT;
       }
     );
     this.physics.add.overlap(
@@ -185,6 +183,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   private updateHealtStatus(): void {
+    this.healthStatus.update();
     if (this.healthStatus.martyDead()) {
       this.scene.start('GameOverScene');
     } else if (this.healthStatus.trumpDead()) {

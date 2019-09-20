@@ -2,6 +2,7 @@ import {GameScene} from '../scene/gameScene';
 import GameData from '../gameData';
 
 type Image = Phaser.GameObjects.Image;
+type Text = Phaser.GameObjects.Text;
 
 const EMPTY = 0x565656;
 const HEALTH_X = 40;
@@ -9,12 +10,13 @@ const HEALTH_Y = 40;
 const HEALTH_PAD = 5;
 const TRUMP_HEALTH = 7;
 
-export default class HealthStatus {
+export default class GameStatus {
   private gameScene: GameScene;
   private gameData: GameData;
   private martyHealthBar: Image[];
   private trumpHealthBar: Image[];
   private trumpHitPoints: number;
+  private scoreText: Text;
 
   constructor(gameScene: GameScene) {
     this.gameScene = gameScene;
@@ -23,6 +25,11 @@ export default class HealthStatus {
     this.drawInitialMartyHealth();
     this.updateMartyHealth();
     this.drawTrumpHealth(this.trumpHitPoints);
+    this.drawScore();
+  }
+
+  public update(): void {
+    this.scoreText.setText(': ' + this.gameData.score);
   }
 
   public martyDead(): boolean {
@@ -77,5 +84,13 @@ export default class HealthStatus {
         )
       );
     }
+  }
+
+  private drawScore() {
+    let pos = {x: HEALTH_X, y: HEALTH_Y * 3 + HEALTH_PAD};
+    let sprite = this.gameScene.add.sprite(pos.x, pos.y, 'coin')
+      .setFrame(8);
+    this.scoreText = this.gameScene.add.text(
+      pos.x + sprite.width, pos.y + HEALTH_PAD, ': 69420', {fontSize: '16px'});
   }
 };
