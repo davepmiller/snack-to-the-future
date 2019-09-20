@@ -21,6 +21,8 @@ export class BootScene extends Phaser.Scene {
 
   create(): void {
     this.sound.add('powerOfLove', {loop: true});
+    this.sound.add('coin');
+    this.sound.add('jump');
   }
 
   update(): void {
@@ -44,6 +46,14 @@ export class BootScene extends Phaser.Scene {
       'powerOfLove', [
         'assets/audio/powerOfLove.mp3',
         'assets/audio/powerOfLove.ogg'
+      ]
+    ).audio(
+      'coin', [
+        'assets/audio/coin.wav'
+      ]
+    ).audio(
+      'jump', [
+        'assets/audio/jump.wav'
       ]
     )
   }

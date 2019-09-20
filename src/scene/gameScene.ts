@@ -15,8 +15,6 @@ type Sprite = Phaser.Physics.Arcade.Sprite;
 type Ground = Phaser.Physics.Arcade.StaticGroup;
 type Group = Phaser.GameObjects.Group;
 
-const COIN_POINT = 69420;
-
 export class GameScene extends Phaser.Scene {
   cursors: CursorKeys;
   marty: Marty;
@@ -31,7 +29,6 @@ export class GameScene extends Phaser.Scene {
   healthStatus: GameStatus;
   gameData: GameData;
   coins: Group;
-  // coinTimer: Phaser.Time.TimerEvent;
   updateCounter: number;
 
   constructor() {
@@ -64,10 +61,6 @@ export class GameScene extends Phaser.Scene {
   update(): void {
     this.updateHealthStatus();
     this.updateComponents();
-  }
-
-  render(): void {
-    console.log('render');
   }
 
   poopCollision(char: Sprite, poop: Sprite): boolean {
@@ -152,7 +145,6 @@ export class GameScene extends Phaser.Scene {
       this.poop,
       this.coins,
       (poop, coin: Coin) => {
-        console.log('COIN POOP');
         coin.destroy();
         coin.setVisible(false);
       }
@@ -199,10 +191,12 @@ export class GameScene extends Phaser.Scene {
   }
 
   private updateComponents(): void {
-    if (this.updateCounter++ >= 20) {
+    if (this.updateCounter++ >= 50) {
       this.updateCounter = 0;
+      let delay = Phaser.Math.Between(500, 1000);
+      console.log('delay = ' + delay);
       this.time.delayedCall(
-        Phaser.Math.Between(300, 800),
+        delay,
         () => this.coins.add(new Coin(this), true),
         null,
         this

@@ -15,6 +15,7 @@ export default class Marty extends Phaser.Physics.Arcade.Sprite {
   offsetJumpY: number;
   offsetX: number;
   offsetY: number;
+  jumpSound: Phaser.Sound.BaseSound;
 
   constructor(gameScene: GameScene) {
     let groundY = gameScene.textures.get('ground').getSourceImage().height;
@@ -24,7 +25,7 @@ export default class Marty extends Phaser.Physics.Arcade.Sprite {
     this.name = SPRITE_KEY;
     this.offsetJumpY = -this.height*2;
     this.offsetY = this.height/2;
-    this.offsetX = this.width/10;
+    this.offsetX = this.width/4;
     this.gameScene.physics.world.enable(this);
     this.body.setSize(this.width/2, this.offsetY)
       .setOffset(this.offsetX, this.offsetY)
