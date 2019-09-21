@@ -47,7 +47,7 @@ export class TitleScene extends Phaser.Scene {
 
   update(): void {
     if (this.start === true) {
-      this.scene.start('GameScene', this.gameData);
+      this.scene.start('IntroSceneOne', this.gameData);
     }
 
     this.toggleVisibility();

@@ -84,6 +84,18 @@
         "type": "image",
         "key": "trumpHealth",
         "url": "./assets/image/trumpHealth.png"
+      },{
+        "type": "image",
+        "key": "introSceneOne",
+        "url": "./assets/image/introSceneOne.png"
+      },{
+        "type": "image",
+        "key": "introSceneTwo",
+        "url": "./assets/image/introSceneTwo.png"
+      },{
+        "type": "image",
+        "key": "introSceneThree",
+        "url": "./assets/image/introSceneThree.png"
       }
     ]
   }

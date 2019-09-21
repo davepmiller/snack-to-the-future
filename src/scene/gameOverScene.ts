@@ -5,8 +5,6 @@ type Sprite = Phaser.Physics.Arcade.Sprite;
 type AnimationFrame = Phaser.Types.Animations.AnimationFrame;
 
 const SPRITE_KEY = 'gameOver';
-const MAX_HEALTH = 3;
-const INITIAL_SCORE = 69420;
 
 export class GameOverScene extends Phaser.Scene {
   sprite: Sprite;
@@ -32,10 +30,9 @@ export class GameOverScene extends Phaser.Scene {
       repeat: 0
     });
     this.sprite.anims.play(SPRITE_KEY, true).on('animationcomplete-gameOver', () => {
-      this.gameData.health = this.gameData.maxHealth;
-      this.gameData.score = this.gameData.initialScore;
-      this.scene.start('TitleScene', this.gameData);
+      this.nextScene();
     });
+    this.createInputHandling();
   }
 
   private frames(): AnimationFrame[] {
@@ -51,5 +48,16 @@ export class GameOverScene extends Phaser.Scene {
     }
 
     return frames;
+  }
+
+  private createInputHandling(): void {
+    this.input.gamepad.on('down', () => this.nextScene());
+    this.input.keyboard.on('keydown', () => this.nextScene());
+  }
+
+  private nextScene(): void {
+    this.gameData.health = this.gameData.maxHealth;
+    this.gameData.score = this.gameData.initialScore;
+    this.scene.start('TitleScene', this.gameData);
   }
 };

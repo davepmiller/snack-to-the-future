@@ -51,6 +51,7 @@ export default class EndScene extends Phaser.Scene {
     this.movieFrame.on('pointerdown', () => game.video.pause());
     this.input.gamepad.on('down', () => game.video.pause());
     this.input.keyboard.on('keydown-Q', () => game.video.pause());
+    this.createInputHandling();
   }
 
   goNextScene(): void {
@@ -60,5 +61,14 @@ export default class EndScene extends Phaser.Scene {
     this.gameData.health = this.gameData.maxHealth;
     this.gameData.score = this.gameData.initialScore;
     this.scene.start('TitleScene', this.gameData);
+  }
+
+  private nextScene(): void {
+    this.goNextScene();
+  }
+
+  private createInputHandling(): void {
+    this.input.gamepad.on('down', () => this.nextScene());
+    this.input.keyboard.on('keydown', () => this.nextScene());
   }
 }
